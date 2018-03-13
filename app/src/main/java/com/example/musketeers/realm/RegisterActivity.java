@@ -26,7 +26,7 @@ public class RegisterActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_register);
 
         et1 = findViewById(R.id.nameField);
         et2 = findViewById(R.id.aadharField);
@@ -66,6 +66,8 @@ public class RegisterActivity extends AppCompatActivity {
         location = et3.getText().toString();
 
         Intent i = new Intent(this, PairActivity.class);
+        i.putExtra(PairActivity.aadhar_name, aadhar);
+        i.putExtra(PairActivity.econsumer_name, econsumer);
         startActivity(i);
     }
 }
