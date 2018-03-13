@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.musketeers.realm.RegisterActivity">
+
+
+    <EditText
+        android:id="@+id/nameField"
+        android:layout_width="@dimen/etwidth"
+        android:layout_height="@dimen/etheight"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="78dp"
+        android:ems="10"
+        android:hint="Name"
+        android:inputType="textPersonName" />
+
+    <EditText
+        android:id="@+id/aadharField"
+        android:layout_width="@dimen/etwidth"
+        android:layout_height="@dimen/etheight"
+        android:layout_below="@+id/nameField"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:ems="10"
+        android:hint="Aadhar No."
+        android:inputType="number" />
+
+    <EditText
+        android:id="@+id/locationField"
+        android:layout_width="220dp"
+        android:layout_height="@dimen/etheight"
+        android:layout_below="@id/aadharField"
+        android:layout_marginTop="30dp"
+        android:layout_alignStart="@id/aadharField"
+        android:ems="10"
+        android:layout_centerHorizontal="true"
+        android:hint="Home Location"/>
+
+    <ImageView
+        android:id="@+id/gps"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@drawable/crosshair"
+        android:layout_toRightOf="@id/locationField"
+        android:layout_alignTop="@id/locationField"/>
+
+    <EditText
+        android:id="@+id/econsumerField"
+        android:layout_width="@dimen/etwidth"
+        android:layout_height="@dimen/etheight"
+        android:layout_below="@+id/locationField"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:ems="10"
+        android:hint="Electricity Consumer No."
+        android:inputType="number" />
+
+    <ImageView
+        android:layout_width="@dimen/etwidth"
+        android:layout_height="@dimen/etheight"
+        android:layout_below="@+id/econsumerField"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:onClick="register"
+        android:src="@drawable/register"/>
+
+</RelativeLayout>
