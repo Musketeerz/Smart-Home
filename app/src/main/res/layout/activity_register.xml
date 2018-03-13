@@ -16,7 +16,7 @@
         android:layout_marginTop="78dp"
         android:ems="10"
         android:hint="Name"
-        android:inputType="textPersonName" />
+        android:inputType="" />
 
     <EditText
         android:id="@+id/aadharField"
@@ -27,42 +27,49 @@
         android:layout_marginTop="30dp"
         android:ems="10"
         android:hint="Aadhar No."
-        android:inputType="number" />
+        android:inputType="number"
+        android:maxLength="12"/>
 
-    <EditText
-        android:id="@+id/locationField"
-        android:layout_width="220dp"
+    <LinearLayout
+        android:layout_width="@dimen/etwidth"
         android:layout_height="@dimen/etheight"
-        android:layout_below="@id/aadharField"
-        android:layout_marginTop="30dp"
-        android:layout_alignStart="@id/aadharField"
-        android:ems="10"
+        android:layout_below="@id/econsumerField"
         android:layout_centerHorizontal="true"
-        android:hint="Home Location"/>
+        android:layout_marginTop="30dp"
+        android:id="@+id/locationField">
 
-    <ImageView
-        android:id="@+id/gps"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:src="@drawable/crosshair"
-        android:layout_toRightOf="@id/locationField"
-        android:layout_alignTop="@id/locationField"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="@dimen/etheight"
+            android:layout_weight="5.25"
+            android:textSize="18sp"
+            android:hint=" Home Location"/>
+
+        <ImageView
+            android:id="@+id/gps"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_weight="1"
+            android:src="@drawable/crosshair"/>
+
+    </LinearLayout>
 
     <EditText
         android:id="@+id/econsumerField"
         android:layout_width="@dimen/etwidth"
         android:layout_height="@dimen/etheight"
-        android:layout_below="@+id/locationField"
+        android:layout_below="@+id/aadharField"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"
         android:ems="10"
         android:hint="Electricity Consumer No."
-        android:inputType="number" />
+        android:inputType="number"
+        android:maxLength="10"/>
 
     <ImageView
         android:layout_width="@dimen/etwidth"
         android:layout_height="@dimen/etheight"
-        android:layout_below="@+id/econsumerField"
+        android:layout_below="@+id/locationField"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"
         android:onClick="register"

@@ -10,14 +10,17 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    EditText et1, et2, et3, et4;
-    ImageView reg, loc;
-    String name, aadhar, location, econsumer;
+    EditText et1, et2, et4;
+    LinearLayout et3;
+    ImageView loc;
+    String name, aadhar, econsumer, location = null;
 
-    Button home;
     GPSTracker gps;
 
     private static final int REQUEST_CODE_PERMISSION = 2;
@@ -42,15 +45,15 @@ public class RegisterActivity extends AppCompatActivity {
         }
 
         loc = findViewById(R.id.gps);
-        loc.setOnClickListener(new View.OnClickListener() {
+        et3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 gps = new GPSTracker(RegisterActivity.this);
                 if (gps.canGetLocation()) {
                     double latitude = gps.getLatitude();
                     double longitude = gps.getLongitude();
-
-                    et3.setText(latitude + "," + longitude);
+                    location = latitude + "," + longitude;
+                    loc.setImageResource(R.drawable.tick1);
                     //Toast.makeText(getApplicationContext(), "Your location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
                 } else {
                     gps.showSettingsAlert();
@@ -63,11 +66,14 @@ public class RegisterActivity extends AppCompatActivity {
         name = et1.getText().toString();
         aadhar = et2.getText().toString();
         econsumer = et4.getText().toString();
-        location = et3.getText().toString();
 
-        Intent i = new Intent(this, PairActivity.class);
-        i.putExtra(PairActivity.aadhar_name, aadhar);
-        i.putExtra(PairActivity.econsumer_name, econsumer);
-        startActivity(i);
+        if ((!name.isEmpty()) && (!aadhar.isEmpty()) && (!econsumer.isEmpty()) && (location != null)) {
+            Intent i = new Intent(this, PairActivity.class);
+            i.putExtra(PairActivity.aadhar_name, aadhar);
+            i.putExtra(PairActivity.econsumer_name, econsumer);
+            startActivity(i);
+        } else {
+            Toast.makeText(getApplicationContext(), "Field empty", Toast.LENGTH_SHORT).show();
+        }
     }
 }
