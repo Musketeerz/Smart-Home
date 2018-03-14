@@ -21,7 +21,6 @@ public class DashboardActivity extends AppCompatActivity {
         appliances.add(new Word("Microwave Oven", false, R.drawable.microwave));
         appliances.add(new Word("Modem", false, R.drawable.modem));
         appliances.add(new Word("Refrigerator", false, R.drawable.refrigerator));
-        appliances.add(new Word("Stove", false, R.drawable.stove));
         appliances.add(new Word("Television", false, R.drawable.tv));
         appliances.add(new Word("Washing Machine", false, R.drawable.wash));
 
