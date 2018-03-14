@@ -67,13 +67,13 @@ public class RegisterActivity extends AppCompatActivity {
         aadhar = et2.getText().toString();
         econsumer = et4.getText().toString();
 
-        if ((!name.isEmpty()) && (!aadhar.isEmpty()) && (!econsumer.isEmpty()) && (location != null)) {
+        if ((!name.isEmpty()) && (!aadhar.isEmpty()) && (aadhar.length() > 11) && (!econsumer.isEmpty()) && (location != null)) {
             Intent i = new Intent(this, PairActivity.class);
             i.putExtra(PairActivity.aadhar_name, aadhar);
             i.putExtra(PairActivity.econsumer_name, econsumer);
             startActivity(i);
         } else {
-            Toast.makeText(getApplicationContext(), "Field empty", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Enter Valid Credentials", Toast.LENGTH_SHORT).show();
         }
     }
 }
