@@ -123,7 +123,6 @@
                                 android:id="@+id/eheater"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:checked="false"
                                 android:layout_marginLeft="5dp"
                                 android:paddingRight="15dp"
                                 android:onClick="reply"/>
@@ -217,7 +216,6 @@
                                 android:id="@+id/eiron"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:checked="false"
                                 android:layout_marginLeft="5dp"
                                 android:paddingRight="15dp"
                                 android:onClick="reply"/>
@@ -311,7 +309,6 @@
                                 android:id="@+id/eoutlight"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:checked="false"
                                 android:layout_marginLeft="5dp"
                                 android:paddingRight="15dp"
                                 android:onClick="reply"/>
@@ -405,7 +402,6 @@
                                 android:id="@+id/ebedlight"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:checked="false"
                                 android:layout_marginLeft="5dp"
                                 android:paddingRight="15dp"
                                 android:onClick="reply"/>
@@ -499,7 +495,6 @@
                                 android:id="@+id/emotor"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:checked="false"
                                 android:layout_marginLeft="5dp"
                                 android:paddingRight="15dp"
                                 android:onClick="reply"/>
@@ -593,7 +588,6 @@
                                 android:id="@+id/ebedfan"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:checked="false"
                                 android:layout_marginLeft="5dp"
                                 android:paddingRight="15dp"
                                 android:onClick="reply"/>
@@ -688,7 +682,6 @@
                                 android:id="@+id/ewash"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:checked="false"
                                 android:layout_marginLeft="5dp"
                                 android:paddingRight="15dp"
                                 android:onClick="reply"/>
