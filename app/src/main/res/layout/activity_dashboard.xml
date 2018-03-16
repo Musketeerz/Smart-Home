@@ -19,7 +19,7 @@
             android:textSize="20sp"
             android:textStyle="bold"
             android:layout_marginRight="5dp"
-            android:paddingTop="10dp"/>
+            android:paddingTop="10dp" />
 
         <ToggleButton
             android:id="@+id/eco"
@@ -43,14 +43,14 @@
             android:layout_height="wrap_content">
 
             <android.support.v7.widget.CardView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="8dp"
                 android:layout_marginTop="5dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
+                    android:layout_height="100dp"
                     android:orientation="horizontal">
 
                     <ImageView
@@ -65,45 +65,93 @@
                         android:layout_height="match_parent"
                         android:layout_weight="3"
                         android:text="Water Heater"
-                        android:textSize="20sp"
-                        android:paddingTop="13dp"
+                        android:textSize="22sp"
+                        android:paddingTop="30dp"
+                        android:textStyle="bold"
                         android:paddingLeft="10dp"/>
 
-                    <ToggleButton
-                        android:id="@+id/eheater"
+                    <LinearLayout
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:checked="false"
-                        android:padding="10dp" />
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"
+                        android:orientation="vertical">
 
-                    <Switch
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:padding="10dp"
-                        android:id="@+id/heater"/>
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:orientation="horizontal"
+                            android:paddingTop="10dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="18sp"
+                                android:text="OFF"/>
+
+                            <Switch
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/heater"
+                                android:paddingLeft="10dp"
+                                android:paddingRight="10dp"
+                                android:onClick="reply"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="18sp"
+                                android:text="ON"/>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:orientation="horizontal"
+                            android:paddingBottom="10dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="18sp"
+                                android:textColor="@color/colorPrimary"
+                                android:text="ECO"/>
+
+                            <ToggleButton
+                                android:id="@+id/eheater"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:checked="false"
+                                android:layout_marginLeft="5dp"
+                                android:paddingRight="15dp"
+                                android:onClick="reply"/>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
 
                 </LinearLayout>
 
             </android.support.v7.widget.CardView>
 
             <android.support.v7.widget.CardView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 app:cardCornerRadius="8dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
+                    android:layout_height="100dp"
                     android:orientation="horizontal">
 
                     <ImageView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:padding="10dp"
+                        android:padding="5dp"
                         android:src="@drawable/iron"/>
 
                     <TextView
@@ -111,44 +159,93 @@
                         android:layout_height="match_parent"
                         android:layout_weight="3"
                         android:text="Iron Box"
-                        android:textSize="20sp"
-                        android:paddingTop="13dp"
+                        android:textSize="22sp"
+                        android:paddingTop="30dp"
+                        android:textStyle="bold"
                         android:paddingLeft="10dp"/>
 
-                    <ToggleButton
-                        android:id="@+id/eiron"
+                    <LinearLayout
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:padding="10dp" />
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"
+                        android:orientation="vertical">
 
-                    <Switch
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:padding="10dp"
-                        android:id="@+id/iron"/>
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:orientation="horizontal"
+                            android:paddingTop="10dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="18sp"
+                                android:text="OFF"/>
+
+                            <Switch
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/iron"
+                                android:paddingLeft="10dp"
+                                android:paddingRight="10dp"
+                                android:onClick="reply"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="18sp"
+                                android:text="ON"/>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:orientation="horizontal"
+                            android:paddingBottom="10dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="18sp"
+                                android:textColor="@color/colorPrimary"
+                                android:text="ECO"/>
+
+                            <ToggleButton
+                                android:id="@+id/eiron"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:checked="false"
+                                android:layout_marginLeft="5dp"
+                                android:paddingRight="15dp"
+                                android:onClick="reply"/>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
 
                 </LinearLayout>
 
             </android.support.v7.widget.CardView>
 
             <android.support.v7.widget.CardView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 app:cardCornerRadius="8dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
+                    android:layout_height="100dp"
                     android:orientation="horizontal">
 
                     <ImageView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:padding="10dp"
+                        android:padding="5dp"
                         android:src="@drawable/streetlamps"/>
 
                     <TextView
@@ -156,44 +253,93 @@
                         android:layout_height="match_parent"
                         android:layout_weight="3"
                         android:text="Outside Light"
-                        android:textSize="20sp"
-                        android:paddingTop="13dp"
+                        android:textSize="22sp"
+                        android:paddingTop="30dp"
+                        android:textStyle="bold"
                         android:paddingLeft="10dp"/>
 
-                    <ToggleButton
-                        android:id="@+id/eoutlight"
+                    <LinearLayout
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:padding="10dp" />
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"
+                        android:orientation="vertical">
 
-                    <Switch
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:padding="10dp"
-                        android:id="@+id/outlight"/>
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:orientation="horizontal"
+                            android:paddingTop="10dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="18sp"
+                                android:text="OFF"/>
+
+                            <Switch
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/outlight"
+                                android:paddingLeft="10dp"
+                                android:paddingRight="10dp"
+                                android:onClick="reply"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="18sp"
+                                android:text="ON"/>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:orientation="horizontal"
+                            android:paddingBottom="10dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="18sp"
+                                android:textColor="@color/colorPrimary"
+                                android:text="ECO"/>
+
+                            <ToggleButton
+                                android:id="@+id/eoutlight"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:checked="false"
+                                android:layout_marginLeft="5dp"
+                                android:paddingRight="15dp"
+                                android:onClick="reply"/>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
 
                 </LinearLayout>
 
             </android.support.v7.widget.CardView>
 
             <android.support.v7.widget.CardView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 app:cardCornerRadius="8dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
+                    android:layout_height="100dp"
                     android:orientation="horizontal">
 
                     <ImageView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:padding="10dp"
+                        android:padding="5dp"
                         android:src="@drawable/lightbulb"/>
 
                     <TextView
@@ -201,44 +347,93 @@
                         android:layout_height="match_parent"
                         android:layout_weight="3"
                         android:text="Bedroom Light"
-                        android:textSize="20sp"
-                        android:paddingTop="13dp"
+                        android:textSize="22sp"
+                        android:paddingTop="30dp"
+                        android:textStyle="bold"
                         android:paddingLeft="10dp"/>
 
-                    <ToggleButton
-                        android:id="@+id/ebedlight"
+                    <LinearLayout
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:padding="10dp" />
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"
+                        android:orientation="vertical">
 
-                    <Switch
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:padding="10dp"
-                        android:id="@+id/bedlight"/>
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:orientation="horizontal"
+                            android:paddingTop="10dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="18sp"
+                                android:text="OFF"/>
+
+                            <Switch
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/bedlight"
+                                android:paddingLeft="10dp"
+                                android:paddingRight="10dp"
+                                android:onClick="reply"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="18sp"
+                                android:text="ON"/>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:orientation="horizontal"
+                            android:paddingBottom="10dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="18sp"
+                                android:textColor="@color/colorPrimary"
+                                android:text="ECO"/>
+
+                            <ToggleButton
+                                android:id="@+id/ebedlight"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:checked="false"
+                                android:layout_marginLeft="5dp"
+                                android:paddingRight="15dp"
+                                android:onClick="reply"/>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
 
                 </LinearLayout>
 
             </android.support.v7.widget.CardView>
 
             <android.support.v7.widget.CardView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 app:cardCornerRadius="8dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
+                    android:layout_height="100dp"
                     android:orientation="horizontal">
 
                     <ImageView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:padding="10dp"
+                        android:padding="5dp"
                         android:src="@drawable/water"/>
 
                     <TextView
@@ -246,44 +441,93 @@
                         android:layout_height="match_parent"
                         android:layout_weight="3"
                         android:text="Water Motor"
-                        android:textSize="20sp"
-                        android:paddingTop="13dp"
+                        android:textSize="22sp"
+                        android:paddingTop="30dp"
+                        android:textStyle="bold"
                         android:paddingLeft="10dp"/>
 
-                    <ToggleButton
-                        android:id="@+id/emotor"
+                    <LinearLayout
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:padding="10dp" />
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"
+                        android:orientation="vertical">
 
-                    <Switch
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:padding="10dp"
-                        android:id="@+id/motor"/>
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:orientation="horizontal"
+                            android:paddingTop="10dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="18sp"
+                                android:text="OFF"/>
+
+                            <Switch
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/motor"
+                                android:paddingLeft="10dp"
+                                android:paddingRight="10dp"
+                                android:onClick="reply"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="18sp"
+                                android:text="ON"/>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:orientation="horizontal"
+                            android:paddingBottom="10dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="18sp"
+                                android:textColor="@color/colorPrimary"
+                                android:text="ECO"/>
+
+                            <ToggleButton
+                                android:id="@+id/emotor"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:checked="false"
+                                android:layout_marginLeft="5dp"
+                                android:paddingRight="15dp"
+                                android:onClick="reply"/>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
 
                 </LinearLayout>
 
             </android.support.v7.widget.CardView>
 
             <android.support.v7.widget.CardView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 app:cardCornerRadius="8dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
+                    android:layout_height="100dp"
                     android:orientation="horizontal">
 
                     <ImageView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:padding="10dp"
+                        android:padding="5dp"
                         android:src="@drawable/fan"/>
 
                     <TextView
@@ -291,30 +535,79 @@
                         android:layout_height="match_parent"
                         android:layout_weight="3"
                         android:text="Bedroom Fan"
-                        android:textSize="20sp"
-                        android:paddingTop="13dp"
+                        android:textSize="22sp"
+                        android:paddingTop="30dp"
+                        android:textStyle="bold"
                         android:paddingLeft="10dp"/>
 
-                    <ToggleButton
-                        android:id="@+id/ebedfan"
+                    <LinearLayout
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:padding="10dp" />
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"
+                        android:orientation="vertical">
 
-                    <Switch
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:padding="10dp"
-                        android:id="@+id/bedfan"/>
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:orientation="horizontal"
+                            android:paddingTop="10dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="18sp"
+                                android:text="OFF"/>
+
+                            <Switch
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/bedfan"
+                                android:paddingLeft="10dp"
+                                android:paddingRight="10dp"
+                                android:onClick="reply"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="18sp"
+                                android:text="ON"/>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:orientation="horizontal"
+                            android:paddingBottom="10dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="18sp"
+                                android:textColor="@color/colorPrimary"
+                                android:text="ECO"/>
+
+                            <ToggleButton
+                                android:id="@+id/ebedfan"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:checked="false"
+                                android:layout_marginLeft="5dp"
+                                android:paddingRight="15dp"
+                                android:onClick="reply"/>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
 
                 </LinearLayout>
 
             </android.support.v7.widget.CardView>
 
             <android.support.v7.widget.CardView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
@@ -322,14 +615,14 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
+                    android:layout_height="100dp"
                     android:orientation="horizontal">
 
                     <ImageView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:padding="10dp"
+                        android:padding="5dp"
                         android:src="@drawable/wash"/>
 
                     <TextView
@@ -337,23 +630,72 @@
                         android:layout_height="match_parent"
                         android:layout_weight="3"
                         android:text="Washing Machine"
-                        android:textSize="20sp"
-                        android:paddingTop="13dp"
+                        android:textSize="22sp"
+                        android:paddingTop="30dp"
+                        android:textStyle="bold"
                         android:paddingLeft="10dp"/>
 
-                    <ToggleButton
-                        android:id="@+id/ewash"
+                    <LinearLayout
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:padding="10dp" />
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"
+                        android:orientation="vertical">
 
-                    <Switch
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:padding="10dp"
-                        android:id="@+id/wash"/>
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:orientation="horizontal"
+                            android:paddingTop="10dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="18sp"
+                                android:text="OFF"/>
+
+                            <Switch
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/wash"
+                                android:paddingLeft="10dp"
+                                android:paddingRight="10dp"
+                                android:onClick="reply"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="18sp"
+                                android:text="ON"/>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:orientation="horizontal"
+                            android:paddingBottom="10dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="18sp"
+                                android:textColor="@color/colorPrimary"
+                                android:text="ECO"/>
+
+                            <ToggleButton
+                                android:id="@+id/ewash"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:checked="false"
+                                android:layout_marginLeft="5dp"
+                                android:paddingRight="15dp"
+                                android:onClick="reply"/>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
 
                 </LinearLayout>
 
