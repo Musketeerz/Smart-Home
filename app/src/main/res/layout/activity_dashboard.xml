@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_marginTop="55dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -95,7 +96,7 @@
                                 android:id="@+id/heater"
                                 android:paddingLeft="10dp"
                                 android:paddingRight="10dp"
-                                android:onClick="reply"/>
+                                android:onClick="command"/>
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -125,7 +126,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="5dp"
                                 android:paddingRight="15dp"
-                                android:onClick="reply"/>
+                                android:onClick="command"/>
 
                         </LinearLayout>
 
@@ -188,7 +189,7 @@
                                 android:id="@+id/iron"
                                 android:paddingLeft="10dp"
                                 android:paddingRight="10dp"
-                                android:onClick="reply"/>
+                                android:onClick="command"/>
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -218,7 +219,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="5dp"
                                 android:paddingRight="15dp"
-                                android:onClick="reply"/>
+                                android:onClick="command"/>
 
                         </LinearLayout>
 
@@ -281,7 +282,7 @@
                                 android:id="@+id/outlight"
                                 android:paddingLeft="10dp"
                                 android:paddingRight="10dp"
-                                android:onClick="reply"/>
+                                android:onClick="command"/>
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -311,7 +312,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="5dp"
                                 android:paddingRight="15dp"
-                                android:onClick="reply"/>
+                                android:onClick="command"/>
 
                         </LinearLayout>
 
@@ -374,7 +375,7 @@
                                 android:id="@+id/bedlight"
                                 android:paddingLeft="10dp"
                                 android:paddingRight="10dp"
-                                android:onClick="reply"/>
+                                android:onClick="command"/>
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -404,7 +405,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="5dp"
                                 android:paddingRight="15dp"
-                                android:onClick="reply"/>
+                                android:onClick="command"/>
 
                         </LinearLayout>
 
@@ -467,7 +468,7 @@
                                 android:id="@+id/motor"
                                 android:paddingLeft="10dp"
                                 android:paddingRight="10dp"
-                                android:onClick="reply"/>
+                                android:onClick="command"/>
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -497,7 +498,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="5dp"
                                 android:paddingRight="15dp"
-                                android:onClick="reply"/>
+                                android:onClick="command"/>
 
                         </LinearLayout>
 
@@ -560,7 +561,7 @@
                                 android:id="@+id/bedfan"
                                 android:paddingLeft="10dp"
                                 android:paddingRight="10dp"
-                                android:onClick="reply"/>
+                                android:onClick="command"/>
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -590,7 +591,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="5dp"
                                 android:paddingRight="15dp"
-                                android:onClick="reply"/>
+                                android:onClick="command"/>
 
                         </LinearLayout>
 
@@ -654,7 +655,7 @@
                                 android:id="@+id/wash"
                                 android:paddingLeft="10dp"
                                 android:paddingRight="10dp"
-                                android:onClick="reply"/>
+                                android:onClick="command"/>
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -684,7 +685,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="5dp"
                                 android:paddingRight="15dp"
-                                android:onClick="reply"/>
+                                android:onClick="command"/>
 
                         </LinearLayout>
 
@@ -697,15 +698,5 @@
         </LinearLayout>
 
     </ScrollView>
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/speak"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_margin="16dp"
-        android:src="@drawable/microphone"
-        android:onClick="talk"/>
 
 </RelativeLayout>

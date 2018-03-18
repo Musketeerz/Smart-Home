@@ -2,16 +2,19 @@ package com.example.musketeers.realm;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.graphics.Color;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -25,13 +28,13 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Locale;
 
-public class DashboardActivity extends AppCompatActivity {
+public class DashboardActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private ToggleButton eco, eHeater, eIron, eOutLight, eBedLight, eMotor, eBedFan, eWash;
     private Switch heater, iron, outLight, bedLight, motor, bedFan, wash;
-    private FloatingActionButton speak;
+    DrawerLayout drawer;
     private TextToSpeech tts;
-    ArrayList<String> device_status=new ArrayList<String >();
+    ArrayList<String> device_status=new ArrayList<>();
 
     private final int REQ_CODE_SPEECH_INPUT = 100;
     private String command, reply;
@@ -40,7 +43,7 @@ public class DashboardActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_dashboard);
+        setContentView(R.layout.activity_dashboard_main);
 
         eco = findViewById(R.id.eco);
         eHeater = findViewById(R.id.eheater);
@@ -59,14 +62,22 @@ public class DashboardActivity extends AppCompatActivity {
         bedFan = findViewById(R.id.bedfan);
         wash = findViewById(R.id.wash);
 
-        speak = findViewById(R.id.speak);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-        //ecoMode(eco);
+        drawer = findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
 
         eco.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                reply(eco);
+                command(eco);
             }
         });
 
@@ -79,107 +90,70 @@ public class DashboardActivity extends AppCompatActivity {
             }
         });
 
-
         databaseReference= FirebaseDatabase.getInstance().getReference("DEVICE STATUS");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot child:dataSnapshot.getChildren() )
+                for (DataSnapshot child:dataSnapshot.getChildren())
                 {
-                    String usrs=child.getValue(String.class);
+                    String usrs = child.getValue(String.class);
                     device_status.clear();
                     device_status.add(usrs);
-//                     Toast.makeText(dummy_firebase_check.this,""+usrs,Toast.LENGTH_SHORT).show();
-//                    status=device_status.get(0);
 
-//                    toast_message();
-                    String[] check=usrs.split("_");
+                    String[] check = usrs.split("_");
 
-                    if (check[0].equals("waterheater"))
-                    {
-                        if (check[1].equals("true"))
-                        {
-                            heater.setChecked(true);
-                        }
-                        else if (check[1].equals("false"))
-                        {
-                            heater.setChecked(false);
-                        }
+                    switch (check[0]) {
+                        case "waterheater":
+                            if (check[1].equals("true")) {
+                                heater.setChecked(true);
+                            } else if (check[1].equals("false")) {
+                                heater.setChecked(false);
+                            }
+                            break;
+                        case "ironbox":
+                            if (check[1].equals("true")) {
+                                iron.setChecked(true);
+                            } else if (check[1].equals("false")) {
+                                iron.setChecked(false);
+                            }
+                            break;
+                        case "bedroomlight":
+                            if (check[1].equals("true")) {
+                                bedLight.setChecked(true);
+                            } else if (check[1].equals("false")) {
+                                bedLight.setChecked(false);
+                            }
+                            break;
+                        case "bedroomfan":
+                            if (check[1].equals("true")) {
+                                bedFan.setChecked(true);
+                            } else if (check[1].equals("false")) {
+                                bedFan.setChecked(false);
+                            }
+                            break;
+                        case "washingmachine":
+                            if (check[1].equals("true")) {
+                                wash.setChecked(true);
+                            } else if (check[1].equals("false")) {
+                                wash.setChecked(false);
+                            }
+                            break;
+                        case "watermotor":
+                            if (check[1].equals("true")) {
+                                motor.setChecked(true);
+                            } else if (check[1].equals("false")) {
+                                motor.setChecked(false);
+                            }
+                            break;
+                        case "outsidelight":
+                            if (check[1].equals("true")) {
+                                outLight.setChecked(true);
+                            } else if (check[1].equals("false")) {
+                                outLight.setChecked(false);
+                            }
+                            break;
                     }
-                    else if (check[0].equals("ironbox"))
-                    {
-                        if (check[1].equals("true"))
-                        {
-
-                            iron.setChecked(true);
-                        }
-                        else if (check[1].equals("false"))
-                        {
-                            iron.setChecked(false);
-                        }
-                    }
-                    else if (check[0].equals("bedroomlight"))
-                    {
-                        if (check[1].equals("true"))
-                        {
-                            bedLight.setChecked(true);
-                        }
-                        else if (check[1].equals("false"))
-                        {
-                            bedLight.setChecked(false);
-                        }
-                    }
-                    else if (check[0].equals("bedroomfan"))
-                    {
-                        if (check[1].equals("true"))
-                        {
-                            bedFan.setChecked(true);
-                        }
-                        else if (check[1].equals("false"))
-                        {
-                            bedFan.setChecked(false);
-                        }
-                    }
-                    else if (check[0].equals("washingmachine"))
-                    {
-                        if (check[1].equals("true"))
-                        {
-                           wash .setChecked(true);
-                        }
-                        else if (check[1].equals("false"))
-                        {
-                            wash.setChecked(false);
-                        }
-                    }
-                    else if (check[0].equals("watermotor"))
-                    {
-                        if (check[1].equals("true"))
-                        {
-                            motor.setChecked(true);
-                        }
-                        else if (check[1].equals("false"))
-                        {
-                            motor.setChecked(false);
-                        }
-                    }
-                    else if (check[0].equals("outsidelight"))
-                    {
-                        if (check[1].equals("true"))
-                        {
-                            outLight.setChecked(true);
-                        }
-                        else if (check[1].equals("false"))
-                        {
-                            outLight.setChecked(false);
-                        }
-                    }
-
-
-
-
-
                 }
-
             }
 
             @Override
@@ -194,109 +168,70 @@ public class DashboardActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot child:dataSnapshot.getChildren() )
                 {
-                    String usrs=child.getValue(String.class);
+                    String usrs = child.getValue(String.class);
                     device_status.clear();
                     device_status.add(usrs);
 
-                    String[] check=usrs.split("_");
+                    String[] check = usrs.split("_");
 
-                    if (check[0].equals("waterheater"))
-                    {
-                        if (check[1].equals("true"))
-                        {
-                            eHeater.setChecked(true);
-                        }
-                        else if (check[1].equals("false"))
-                        {
-                            eHeater.setChecked(false);
-                        }
+                    switch (check[0]) {
+                        case "waterheater":
+                            if (check[1].equals("true")) {
+                                eHeater.setChecked(true);
+                            } else if (check[1].equals("false")) {
+                                eHeater.setChecked(false);
+                            }
+                            break;
+                        case "ironbox":
+                            if (check[1].equals("true")) {
+                                eIron.setChecked(true);
+                            } else if (check[1].equals("false")) {
+                                eIron.setChecked(false);
+                            }
+                            break;
+                        case "bedroomlight":
+                            if (check[1].equals("true")) {
+                                eBedLight.setChecked(true);
+                            } else if (check[1].equals("false")) {
+                                eBedLight.setChecked(false);
+                            }
+                            break;
+                        case "bedroomfan":
+                            if (check[1].equals("true")) {
+                                eBedFan.setChecked(true);
+                            } else if (check[1].equals("false")) {
+                                eBedFan.setChecked(false);
+                            }
+                            break;
+                        case "washingmachine":
+                            if (check[1].equals("true")) {
+                                eWash.setChecked(true);
+                            } else if (check[1].equals("false")) {
+                                eWash.setChecked(false);
+                            }
+                            break;
+                        case "watermotor":
+                            if (check[1].equals("true")) {
+                                eMotor.setChecked(true);
+                            } else if (check[1].equals("false")) {
+                                eMotor.setChecked(false);
+                            }
+                            break;
+                        case "outsidelight":
+                            if (check[1].equals("true")) {
+                                eOutLight.setChecked(true);
+                            } else if (check[1].equals("false")) {
+                                eOutLight.setChecked(false);
+                            }
+                            break;
                     }
-                    else if (check[0].equals("ironbox"))
-                    {
-                        if (check[1].equals("true"))
-                        {
-                            eIron.setChecked(true);
-                        }
-                        else if (check[1].equals("false"))
-                        {
-                            eIron.setChecked(false);
-                        }
-                    }
-                    else if (check[0].equals("bedroomlight"))
-                    {
-                        if (check[1].equals("true"))
-                        {
-                            eBedLight.setChecked(true);
-                        }
-                        else if (check[1].equals("false"))
-                        {
-                            eBedLight.setChecked(false);
-                        }
-                    }
-                    else if (check[0].equals("bedroomfan"))
-                    {
-                        if (check[1].equals("true"))
-                        {
-                            eBedFan.setChecked(true);
-                        }
-                        else if (check[1].equals("false"))
-                        {
-                            eBedFan.setChecked(false);
-                        }
-                    }
-                    else if (check[0].equals("washingmachine"))
-                    {
-                        if (check[1].equals("true"))
-                        {
-                            eWash .setChecked(true);
-                        }
-                        else if (check[1].equals("false"))
-                        {
-                            eWash.setChecked(false);
-                        }
-                    }
-                    else if (check[0].equals("watermotor"))
-                    {
-                        if (check[1].equals("true"))
-                        {
-                            eMotor.setChecked(true);
-                        }
-                        else if (check[1].equals("false"))
-                        {
-                            eMotor.setChecked(false);
-                        }
-                    }
-                    else if (check[0].equals("outsidelight"))
-                    {
-                        if (check[1].equals("true"))
-                        {
-                            eOutLight.setChecked(true);
-                        }
-                        else if (check[1].equals("false"))
-                        {
-                            eOutLight.setChecked(false);
-                        }
-                    }
-
-
-
-
-
                 }
-
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
             }
         });
-
-
-
-
-
-
     }
 
     public void ecoMode(View view) {
@@ -317,11 +252,6 @@ public class DashboardActivity extends AppCompatActivity {
             databaseReference.child("WATER MOTOR").setValue("watermotor_true");
             databaseReference.child("BEDROOM FAN").setValue("bedroomfan_true");
             databaseReference.child("WASHING MACHINE").setValue("washingmachine_true");
-
-
-
-
-
         } else {
             eHeater.setChecked(false);
             eIron.setChecked(false);
@@ -342,12 +272,10 @@ public class DashboardActivity extends AppCompatActivity {
         }
     }
 
-    public void reply(View view) {
+    public void command(View view) {
         if (view.getId() == R.id.heater) {
             if (heater.isChecked()) {
                 command = "turn on water heater";
-
-
             } else {
                 command = "turn off water heater";
             }
@@ -613,14 +541,12 @@ public class DashboardActivity extends AppCompatActivity {
 
                 databaseReference= FirebaseDatabase.getInstance().getReference("ECOMODE STATUS");
 
-
             } else if (cmd.contains("off")) {
                 eco.setChecked(false);
                 ecoMode(eco);
                 reply = "eco mode turned off";
 
                 databaseReference= FirebaseDatabase.getInstance().getReference("ECOMODE STATUS");
-
 
             } else {
                 reply = "Pardon! Speak Again.";
@@ -632,7 +558,6 @@ public class DashboardActivity extends AppCompatActivity {
 
                 databaseReference= FirebaseDatabase.getInstance().getReference("DEVICE STATUS");
                 databaseReference.child("WATER HEATER").setValue("waterheater_true");
-
 
             } else if (cmd.contains("off")) {
                 heater.setChecked(false);
@@ -651,7 +576,6 @@ public class DashboardActivity extends AppCompatActivity {
 
                 databaseReference= FirebaseDatabase.getInstance().getReference("DEVICE STATUS");
                 databaseReference.child("IRON BOX").setValue("ironbox_true");
-
 
             } else if (cmd.contains("off")) {
                 iron.setChecked(false);
@@ -688,7 +612,6 @@ public class DashboardActivity extends AppCompatActivity {
 
                 databaseReference= FirebaseDatabase.getInstance().getReference("DEVICE STATUS");
                 databaseReference.child("BEDROOM LIGHT").setValue("bedroomlight_true");
-
 
             } else if (cmd.contains("off")) {
                 bedLight.setChecked(false);
@@ -760,5 +683,33 @@ public class DashboardActivity extends AppCompatActivity {
 
         Toast.makeText(getApplicationContext(), reply, Toast.LENGTH_SHORT).show();
         tts.speak(reply, TextToSpeech.QUEUE_FLUSH, null);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        switch (id) {
+            case R.id.nav_eco:
+                break;
+            case R.id.nav_analysis:
+                break;
+            case R.id.nav_settings:
+                break;
+            case R.id.nav_logout:
+                break;
+        }
+
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 }
