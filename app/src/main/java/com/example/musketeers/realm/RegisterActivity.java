@@ -28,9 +28,10 @@ public class RegisterActivity extends AppCompatActivity {
     private static final String TAG = "Voice Register";
     EditText et1, et2, et4;
     LinearLayout et3;
-    ImageView loc;
+    ImageView loc, reg;
     FloatingActionButton fab;
     String name, aadhar, econsumer, location = null;
+    String ano, eno, an = "", en = "";
     private String command, reply;
     int field = 1;
 
@@ -51,6 +52,7 @@ public class RegisterActivity extends AppCompatActivity {
         et3 = findViewById(R.id.locationField);
         et4 = findViewById(R.id.econsumerField);
         fab = findViewById(R.id.speak);
+        reg = findViewById(R.id.reg);
 
         try {
             if (ActivityCompat.checkSelfPermission(this, mPermission) != MockPackageManager.PERMISSION_GRANTED) {
@@ -100,30 +102,79 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     public void talk(View view) {
+
         switch (field) {
             case 1:
                 tts.speak("Please tell your name", TextToSpeech.QUEUE_FLUSH, null);
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        for(int progress = 0; progress<100; progress++) {
+                            try {
+                                Thread.sleep(15);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        promptSpeechInput();
+                    }
+                }).start();
                 break;
             case 2:
                 tts.speak("Please tell your 12 digit aadhar number", TextToSpeech.QUEUE_FLUSH, null);
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        for(int progress = 0; progress<100; progress++) {
+                            try {
+                                Thread.sleep(25);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        promptSpeechInput();
+                    }
+                }).start();
                 break;
             case 3:
                 tts.speak("Please tell your 10 digit electricity consumer number", TextToSpeech.QUEUE_FLUSH, null);
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        for(int progress = 0; progress<100; progress++) {
+                            try {
+                                Thread.sleep(35);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        promptSpeechInput();
+                    }
+                }).start();
+                break;
+            case 4:
+                ano = et2.getText().toString();
+                eno = et4.getText().toString();
+                for (int i=0; i<ano.length(); i++)
+                    an = an + ano.charAt(i) + " ";
+                for (int i=0; i<eno.length(); i++)
+                    en = en + eno.charAt(i) + " ";
+                tts.speak("Please confirm your input \n" + "\nName: \n" + et1.getText().toString() + "\n Aadhar number: \n" + an + "\n Electricity Consumer number: \n" + en + "\n Would you like to register?", TextToSpeech.QUEUE_FLUSH, null);
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        for(int progress = 0; progress<100; progress++) {
+                            try {
+                                Thread.sleep(180);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        promptSpeechInput();
+                    }
+                }).start();
                 break;
         }
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                for(int progress = 0; progress<100; progress++) {
-                    try {
-                        Thread.sleep(25);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-                promptSpeechInput();
-            }
-        }).start();
     }
 
     private void promptSpeechInput() {
@@ -183,23 +234,17 @@ public class RegisterActivity extends AppCompatActivity {
                     talk(fab);
                 location(et3);
                 break;
+            case 4:
+                if (cmd.equals("yes"))
+                    register(reg);
+                break;
         }
         Toast.makeText(getApplicationContext(), cmd, Toast.LENGTH_SHORT).show();
-        tts.speak(cmd, TextToSpeech.QUEUE_FLUSH, null);
         field ++;
-        if (field < 4)
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    for(int progress = 0; progress<100; progress++) {
-                        try {
-                            Thread.sleep(40);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    talk(fab);
-                }
-            }).start();
+        if (field < 5)
+            talk(fab);
+        else {
+            field = 1;
+        }
     }
 }
