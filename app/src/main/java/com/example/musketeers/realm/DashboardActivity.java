@@ -398,12 +398,231 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
                     ArrayList<String> result = data
                             .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                     command = result.get(0).toLowerCase();
-                    makeToast(command);
+                    already(command);
                 }
                 break;
             }
 
         }
+    }
+
+    private void already(String cmd) {
+        if (cmd.contains("eco")) {
+            if (cmd.contains("water heater")) {
+                if (cmd.contains("on")) {
+                    if (eHeater.isChecked())
+                        reply = "eco mode of water heater already turned on";
+                    else
+                        makeToast(cmd);
+                } else if (cmd.contains("off")) {
+                    if (!eHeater.isChecked())
+                        reply = "eco mode of water heater already turned off";
+                    else
+                        makeToast(cmd);
+                } else {
+                    makeToast(cmd);
+                }
+            } else if (cmd.contains("iron box")) {
+                if (cmd.contains("turn on")) {
+                    if (eIron.isChecked())
+                        reply = "eco mode of iron box already turned on";
+                    else
+                        makeToast(cmd);
+                } else if (cmd.contains("off")) {
+                    if (!eIron.isChecked())
+                        reply = "eco mode of iron box already turned off";
+                    else
+                        makeToast(cmd);
+                } else {
+                    makeToast(cmd);
+                }
+            } else if (cmd.contains("outside light")) {
+                if (cmd.contains("on")) {
+                    if (eOutLight.isChecked())
+                        reply = "eco mode of outside light already turned on";
+                    else
+                        makeToast(cmd);
+                } else if (cmd.contains("off")) {
+                    if (!eOutLight.isChecked())
+                        reply = "eco mode of outside light already turned off";
+                    else
+                        makeToast(cmd);
+                } else {
+                    makeToast(cmd);
+                }
+            } else if (cmd.contains("bedroom light")) {
+                if (cmd.contains("on")) {
+                    if (eBedLight.isChecked())
+                        reply = "eco mode of bedroom light already turned on";
+                    else
+                        makeToast(cmd);
+                } else if (cmd.contains("off")) {
+                    if (!eBedLight.isChecked())
+                        reply = "eco mode of bedroom light already turned off";
+                    else
+                        makeToast(cmd);
+                } else {
+                    makeToast(cmd);
+                }
+            } else if (cmd.contains("water motor")) {
+                if (cmd.contains("on")) {
+                    if (eMotor.isChecked())
+                    reply = "eco mode of water motor already turned on";
+                    else
+                        makeToast(cmd);
+                } else if (cmd.contains("off")) {
+                    if (!eMotor.isChecked())
+                    reply = "eco mode of water motor already turned off";
+                    else
+                        makeToast(cmd);
+                } else {
+                    makeToast(cmd);
+                }
+            } else if (cmd.contains("bedroom fan")) {
+                if (cmd.contains("on")) {
+                    if (eBedFan.isChecked())
+                        reply = "eco mode of bedroom fan already turned on";
+                    else
+                        makeToast(cmd);
+                } else if (cmd.contains("off")) {
+                    if (!eBedFan.isChecked())
+                        reply = "eco mode of bedroom fan already turned off";
+                    else
+                        makeToast(cmd);
+                } else {
+                    makeToast(cmd);
+                }
+            } else if (cmd.contains("washing machine")) {
+                if (cmd.contains("on")) {
+                    if (eWash.isChecked())
+                        reply = "eco mode of washing machine already turned on";
+                    else
+                        makeToast(cmd);
+                } else if (cmd.contains("off")) {
+                    if (!eWash.isChecked())
+                        reply = "eco mode of washing machine already turned off";
+                    else
+                        makeToast(cmd);
+                } else {
+                    makeToast(cmd);
+                }
+            } else if (cmd.contains("on")) {
+                if (eco.isChecked())
+                    reply = "eco mode already turned on";
+                else
+                    makeToast(cmd);
+            } else if (cmd.contains("off")) {
+                if (!eco.isChecked())
+                    reply = "eco mode already turned off";
+                else
+                    makeToast(cmd);
+            } else {
+                makeToast(cmd);
+            }
+        } else if (cmd.contains("water heater")) {
+            if (cmd.contains("on")) {
+                if (heater.isChecked())
+                    reply = "water heater already turned on";
+                else
+                    makeToast(cmd);
+            } else if (cmd.contains("off")) {
+                if (!heater.isChecked())
+                    reply = "water heater already turned off";
+                else
+                    makeToast(cmd);
+            } else {
+                makeToast(cmd);
+            }
+        } else if (cmd.contains("iron box")) {
+            if (cmd.contains("turn on")) {
+                if (iron.isChecked())
+                    reply = "iron box already turned on";
+                else
+                    makeToast(cmd);
+            } else if (cmd.contains("off")) {
+                if (!iron.isChecked())
+                    reply = "iron box already turned off";
+                else
+                    makeToast(cmd);
+            } else {
+                makeToast(cmd);
+            }
+        } else if (cmd.contains("outside light")) {
+            if (cmd.contains("on")) {
+                if (outLight.isChecked())
+                    reply = "outside light already turned on";
+                else
+                    makeToast(cmd);
+            } else if (cmd.contains("off")) {
+                if (!outLight.isChecked())
+                    reply = "outside light already turned off";
+                else
+                    makeToast(cmd);
+            } else {
+                makeToast(cmd);
+            }
+        } else if (cmd.contains("bedroom light")) {
+            if (cmd.contains("on")) {
+                if (bedLight.isChecked())
+                    reply = "bedroom light already turned on";
+                else
+                    makeToast(cmd);
+            } else if (cmd.contains("off")) {
+                if (!bedLight.isChecked())
+                    reply = "bedroom light already turned off";
+                else
+                    makeToast(cmd);
+            } else {
+                makeToast(cmd);
+            }
+        } else if (cmd.contains("water motor")) {
+            if (cmd.contains("on")) {
+                if (motor.isChecked())
+                    reply = "water motor already turned on";
+                else
+                    makeToast(cmd);
+            } else if (cmd.contains("off")) {
+                if (!motor.isChecked())
+                    reply = "water motor already turned off";
+                else
+                    makeToast(cmd);
+            } else {
+                makeToast(cmd);
+            }
+        } else if (cmd.contains("bedroom fan")) {
+            if (cmd.contains("on")) {
+                if (bedFan.isChecked())
+                    reply = "bedroom fan already turned on";
+                else
+                    makeToast(cmd);
+            } else if (cmd.contains("off")) {
+                if (!bedFan.isChecked())
+                    reply = "bedroom fan already turned off";
+                else
+                    makeToast(cmd);
+            } else {
+                makeToast(cmd);
+            }
+        } else if (cmd.contains("washing machine")) {
+            if (cmd.contains("on")) {
+                if (wash.isChecked())
+                    reply = "washing machine already turned on";
+                else
+                    makeToast(cmd);
+            } else if (cmd.contains("off")) {
+                if (!wash.isChecked())
+                    reply = "washing machine already turned off";
+                else
+                    makeToast(cmd);
+            } else {
+                makeToast(cmd);
+            }
+        } else {
+            makeToast(cmd);
+        }
+
+        Toast.makeText(getApplicationContext(), reply, Toast.LENGTH_SHORT).show();
+        tts.speak(reply, TextToSpeech.QUEUE_FLUSH, null);
     }
 
     private void makeToast(String cmd) {
