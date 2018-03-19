@@ -36,7 +36,8 @@
         android:layout_below="@id/econsumerField"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"
-        android:id="@+id/locationField">
+        android:id="@+id/locationField"
+        android:onClick="location">
 
         <TextView
             android:layout_width="0dp"
@@ -74,5 +75,15 @@
         android:layout_marginTop="50dp"
         android:onClick="register"
         android:src="@drawable/register"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/speak"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="@dimen/fab_margin"
+        android:src="@drawable/ic_mic_black_24dp"
+        android:onClick="talk"/>
 
 </RelativeLayout>
