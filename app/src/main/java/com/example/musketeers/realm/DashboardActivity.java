@@ -39,11 +39,29 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
     private final int REQ_CODE_SPEECH_INPUT = 100;
     private String command, reply;
     DatabaseReference databaseReference;
+    public static Boolean registered=false;
+    public static String adhaar="";
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
+        if (registered==false)
+        {
+            Intent nxt=new Intent(DashboardActivity.this,RegisterActivity.class);
+            startActivity(nxt);
+
+
+        }
+
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard_main);
+
+
 
         eco = findViewById(R.id.eco);
         eHeater = findViewById(R.id.eheater);
@@ -90,7 +108,7 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
             }
         });
 
-        databaseReference= FirebaseDatabase.getInstance().getReference("DEVICE STATUS");
+        databaseReference= FirebaseDatabase.getInstance().getReference(adhaar).child("DEVICE STATUS");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -162,7 +180,7 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
             }
         });
 
-        databaseReference= FirebaseDatabase.getInstance().getReference("ECOMODE STATUS");
+        databaseReference= FirebaseDatabase.getInstance().getReference(adhaar).child("ECOMODE STATUS");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -244,7 +262,7 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
             eBedFan.setChecked(true);
             eWash.setChecked(true);
 
-            databaseReference= FirebaseDatabase.getInstance().getReference("ECOMODE STATUS");
+            databaseReference= FirebaseDatabase.getInstance().getReference(adhaar).child("ECOMODE STATUS");
             databaseReference.child("WATER HEATER").setValue("waterheater_true");
             databaseReference.child("IRON BOX").setValue("ironbox_true");
             databaseReference.child("OUTSIDE LIGHT").setValue("outsidelight_true");
@@ -261,7 +279,7 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
             eBedFan.setChecked(false);
             eWash.setChecked(false);
 
-            databaseReference= FirebaseDatabase.getInstance().getReference("ECOMODE STATUS");
+            databaseReference= FirebaseDatabase.getInstance().getReference(adhaar).child("ECOMODE STATUS");
             databaseReference.child("WATER HEATER").setValue("waterheater_false");
             databaseReference.child("IRON BOX").setValue("ironbox_false");
             databaseReference.child("OUTSIDE LIGHT").setValue("outsidelight_false");
@@ -632,14 +650,14 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
                     eHeater.setChecked(true);
                     reply = "eco mode of water heater turned on";
 
-                    databaseReference= FirebaseDatabase.getInstance().getReference("ECOMODE STATUS");
+                    databaseReference= FirebaseDatabase.getInstance().getReference(adhaar).child("ECOMODE STATUS");
                     databaseReference.child("WATER HEATER").setValue("waterheater_true");
 
                 } else if (cmd.contains("off")) {
                     eHeater.setChecked(false);
                     reply = "eco mode of water heater turned off";
 
-                    databaseReference= FirebaseDatabase.getInstance().getReference("ECOMODE STATUS");
+                    databaseReference= FirebaseDatabase.getInstance().getReference(adhaar).child("ECOMODE STATUS");
                     databaseReference.child("WATER HEATER").setValue("waterheater_false");
 
                 } else {
@@ -650,14 +668,14 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
                     eIron.setChecked(true);
                     reply = "eco mode of iron box turned on";
 
-                    databaseReference= FirebaseDatabase.getInstance().getReference("ECOMODE STATUS");
+                    databaseReference= FirebaseDatabase.getInstance().getReference(adhaar).child("ECOMODE STATUS");
                     databaseReference.child("IRON BOX").setValue("ironbox_true");
 
                 } else if (cmd.contains("off")) {
                     eIron.setChecked(false);
                     reply = "eco mode of iron box turned off";
 
-                    databaseReference= FirebaseDatabase.getInstance().getReference("ECOMODE STATUS");
+                    databaseReference= FirebaseDatabase.getInstance().getReference(adhaar).child("ECOMODE STATUS");
                     databaseReference.child("IRON BOX").setValue("ironbox_false");
 
                 } else {
@@ -668,14 +686,14 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
                     eOutLight.setChecked(true);
                     reply = "eco mode of outside light turned on";
 
-                    databaseReference= FirebaseDatabase.getInstance().getReference("ECOMODE STATUS");
+                    databaseReference= FirebaseDatabase.getInstance().getReference(adhaar).child("ECOMODE STATUS");
                     databaseReference.child("OUTSIDE LIGHT").setValue("outsidelight_true");
 
                 } else if (cmd.contains("off")) {
                     eOutLight.setChecked(false);
                     reply = "eco mode of outside light turned off";
 
-                    databaseReference= FirebaseDatabase.getInstance().getReference("ECOMODE STATUS");
+                    databaseReference= FirebaseDatabase.getInstance().getReference(adhaar).child("ECOMODE STATUS");
                     databaseReference.child("OUTSIDE LIGHT").setValue("outsidelight_false");
 
                 } else {
@@ -686,14 +704,14 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
                     eBedLight.setChecked(true);
                     reply = "eco mode of bedroom light turned on";
 
-                    databaseReference= FirebaseDatabase.getInstance().getReference("ECOMODE STATUS");
+                    databaseReference= FirebaseDatabase.getInstance().getReference(adhaar).child("ECOMODE STATUS");
                     databaseReference.child("BEDROOM LIGHT").setValue("bedroomlight_true");
 
                 } else if (cmd.contains("off")) {
                     eBedLight.setChecked(false);
                     reply = "eco mode of bedroom light turned off";
 
-                    databaseReference= FirebaseDatabase.getInstance().getReference("ECOMODE STATUS");
+                    databaseReference= FirebaseDatabase.getInstance().getReference(adhaar).child("ECOMODE STATUS");
                     databaseReference.child("BEDROOM LIGHT").setValue("bedroomlight_false");
 
                 } else {
@@ -704,14 +722,14 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
                     eMotor.setChecked(true);
                     reply = "eco mode of water motor turned on";
 
-                    databaseReference= FirebaseDatabase.getInstance().getReference("ECOMODE STATUS");
+                    databaseReference= FirebaseDatabase.getInstance().getReference(adhaar).child("ECOMODE STATUS");
                     databaseReference.child("WATER MOTOR").setValue("watermotor_true");
 
                 } else if (cmd.contains("off")) {
                     eMotor.setChecked(false);
                     reply = "eco mode of water motor turned off";
 
-                    databaseReference= FirebaseDatabase.getInstance().getReference("ECOMODE STATUS");
+                    databaseReference= FirebaseDatabase.getInstance().getReference(adhaar).child("ECOMODE STATUS");
                     databaseReference.child("WATER MOTOR").setValue("watermotor_false");
 
                 } else {
@@ -722,14 +740,14 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
                     eBedFan.setChecked(true);
                     reply = "eco mode of bedroom fan turned on";
 
-                    databaseReference= FirebaseDatabase.getInstance().getReference("ECOMODE STATUS");
+                    databaseReference= FirebaseDatabase.getInstance().getReference(adhaar).child("ECOMODE STATUS");
                     databaseReference.child("BEDROOM FAN").setValue("bedroomfan_true");
 
                 } else if (cmd.contains("off")) {
                     eBedFan.setChecked(false);
                     reply = "eco mode of bedroom fan turned off";
 
-                    databaseReference= FirebaseDatabase.getInstance().getReference("ECOMODE STATUS");
+                    databaseReference= FirebaseDatabase.getInstance().getReference(adhaar).child("ECOMODE STATUS");
                     databaseReference.child("BEDROOM FAN").setValue("bedroomfan_false");
 
                 } else {
@@ -740,14 +758,14 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
                     eWash.setChecked(true);
                     reply = "eco mode of washing machine turned on";
 
-                    databaseReference= FirebaseDatabase.getInstance().getReference("ECOMODE STATUS");
+                    databaseReference= FirebaseDatabase.getInstance().getReference(adhaar).child("ECOMODE STATUS");
                     databaseReference.child("WASHING MACHINE").setValue("washingmachine_true");
 
                 } else if (cmd.contains("off")) {
                     eWash.setChecked(false);
                     reply = "eco mode of washing machine turned off";
 
-                    databaseReference= FirebaseDatabase.getInstance().getReference("ECOMODE STATUS");
+                    databaseReference= FirebaseDatabase.getInstance().getReference(adhaar).child("ECOMODE STATUS");
                     databaseReference.child("WASHING MACHINE").setValue("washingmachine_false");
 
                 } else {
@@ -758,14 +776,14 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
                 ecoMode(eco);
                 reply = "eco mode turned on";
 
-                databaseReference= FirebaseDatabase.getInstance().getReference("ECOMODE STATUS");
+//                databaseReference= FirebaseDatabase.getInstance().getReference("ECOMODE STATUS");
 
             } else if (cmd.contains("off")) {
                 eco.setChecked(false);
                 ecoMode(eco);
                 reply = "eco mode turned off";
 
-                databaseReference= FirebaseDatabase.getInstance().getReference("ECOMODE STATUS");
+//                databaseReference= FirebaseDatabase.getInstance().getReference("ECOMODE STATUS");
 
             } else {
                 reply = "Pardon! Speak Again.";
@@ -775,14 +793,16 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
                 heater.setChecked(true);
                 reply = "water heater turned on";
 
-                databaseReference= FirebaseDatabase.getInstance().getReference("DEVICE STATUS");
+
+                databaseReference= FirebaseDatabase.getInstance().getReference(adhaar).child("DEVICE STATUS");
+
                 databaseReference.child("WATER HEATER").setValue("waterheater_true");
 
             } else if (cmd.contains("off")) {
                 heater.setChecked(false);
                 reply = "water heater turned off";
 
-                databaseReference= FirebaseDatabase.getInstance().getReference("DEVICE STATUS");
+                databaseReference= FirebaseDatabase.getInstance().getReference(adhaar).child("DEVICE STATUS");
                 databaseReference.child("WATER HEATER").setValue("waterheater_false");
 
             } else {
@@ -793,14 +813,14 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
                 iron.setChecked(true);
                 reply = "iron box turned on";
 
-                databaseReference= FirebaseDatabase.getInstance().getReference("DEVICE STATUS");
+                databaseReference= FirebaseDatabase.getInstance().getReference(adhaar).child("DEVICE STATUS");
                 databaseReference.child("IRON BOX").setValue("ironbox_true");
 
             } else if (cmd.contains("off")) {
                 iron.setChecked(false);
                 reply = "iron box turned off";
 
-                databaseReference= FirebaseDatabase.getInstance().getReference("DEVICE STATUS");
+                databaseReference= FirebaseDatabase.getInstance().getReference(adhaar).child("DEVICE STATUS");
                 databaseReference.child("IRON BOX").setValue("ironbox_false");
 
             } else {
@@ -811,14 +831,14 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
                 outLight.setChecked(true);
                 reply = "outside light turned on";
 
-                databaseReference= FirebaseDatabase.getInstance().getReference("DEVICE STATUS");
+                databaseReference= FirebaseDatabase.getInstance().getReference(adhaar).child("DEVICE STATUS");
                 databaseReference.child("OUTSIDE LIGHT").setValue("outsidelight_true");
 
             } else if (cmd.contains("off")) {
                 outLight.setChecked(false);
                 reply = "outside light turned off";
 
-                databaseReference= FirebaseDatabase.getInstance().getReference("DEVICE STATUS");
+                databaseReference= FirebaseDatabase.getInstance().getReference(adhaar).child("DEVICE STATUS");
                 databaseReference.child("OUTSIDE LIGHT").setValue("outsidelight_false");
 
             } else {
@@ -829,14 +849,14 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
                 bedLight.setChecked(true);
                 reply = "bedroom light turned on";
 
-                databaseReference= FirebaseDatabase.getInstance().getReference("DEVICE STATUS");
+                databaseReference= FirebaseDatabase.getInstance().getReference(adhaar).child("DEVICE STATUS");
                 databaseReference.child("BEDROOM LIGHT").setValue("bedroomlight_true");
 
             } else if (cmd.contains("off")) {
                 bedLight.setChecked(false);
                 reply = "bedroom light turned off";
 
-                databaseReference= FirebaseDatabase.getInstance().getReference("DEVICE STATUS");
+                databaseReference= FirebaseDatabase.getInstance().getReference(adhaar).child("DEVICE STATUS");
                 databaseReference.child("BEDROOM LIGHT").setValue("bedroomlight_false");
 
             } else {
@@ -847,14 +867,14 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
                 motor.setChecked(true);
                 reply = "water motor turned on";
 
-                databaseReference= FirebaseDatabase.getInstance().getReference("DEVICE STATUS");
+                databaseReference= FirebaseDatabase.getInstance().getReference(adhaar).child("DEVICE STATUS");
                 databaseReference.child("WATER MOTOR").setValue("watermotor_true");
 
             } else if (cmd.contains("off")) {
                 motor.setChecked(false);
                 reply = "water motor turned off";
 
-                databaseReference= FirebaseDatabase.getInstance().getReference("DEVICE STATUS");
+                databaseReference= FirebaseDatabase.getInstance().getReference(adhaar).child("DEVICE STATUS");
                 databaseReference.child("WATER MOTOR").setValue("watermotor_false");
 
             } else {
@@ -865,14 +885,14 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
                 bedFan.setChecked(true);
                 reply = "bedroom fan turned on";
 
-                databaseReference= FirebaseDatabase.getInstance().getReference("DEVICE STATUS");
+                databaseReference= FirebaseDatabase.getInstance().getReference(adhaar).child("DEVICE STATUS");
                 databaseReference.child("BEDROOM FAN").setValue("bedroomfan_true");
 
             } else if (cmd.contains("off")) {
                 bedFan.setChecked(false);
                 reply = "bedroom fan turned off";
 
-                databaseReference= FirebaseDatabase.getInstance().getReference("DEVICE STATUS");
+                databaseReference= FirebaseDatabase.getInstance().getReference(adhaar).child("DEVICE STATUS");
                 databaseReference.child("BEDROOM FAN").setValue("bedroomfan_false");
 
             } else {
@@ -883,14 +903,14 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
                 wash.setChecked(true);
                 reply = "washing machine turned on";
 
-                databaseReference= FirebaseDatabase.getInstance().getReference("DEVICE STATUS");
+                databaseReference= FirebaseDatabase.getInstance().getReference(adhaar).child("DEVICE STATUS");
                 databaseReference.child("WASHING MACHINE").setValue("washingmachine_true");
 
             } else if (cmd.contains("off")) {
                 wash.setChecked(false);
                 reply = "washing machine turned off";
 
-                databaseReference= FirebaseDatabase.getInstance().getReference("DEVICE STATUS");
+                databaseReference= FirebaseDatabase.getInstance().getReference(adhaar).child("DEVICE STATUS");
                 databaseReference.child("WASHING MACHINE").setValue("washingmachine_false");
 
             } else {

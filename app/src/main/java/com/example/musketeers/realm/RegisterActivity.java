@@ -20,6 +20,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -34,6 +37,7 @@ public class RegisterActivity extends AppCompatActivity {
     String ano, eno, an = "", en = "";
     private String command, reply;
     int field = 1;
+    DatabaseReference databaseReference;
 
     GPSTracker gps;
     private final int REQ_CODE_SPEECH_INPUT = 100;
@@ -53,6 +57,7 @@ public class RegisterActivity extends AppCompatActivity {
         et4 = findViewById(R.id.econsumerField);
         fab = findViewById(R.id.speak);
         reg = findViewById(R.id.reg);
+
 
         try {
             if (ActivityCompat.checkSelfPermission(this, mPermission) != MockPackageManager.PERMISSION_GRANTED) {
@@ -96,6 +101,41 @@ public class RegisterActivity extends AppCompatActivity {
             i.putExtra(PairActivity.aadhar_name, aadhar);
             i.putExtra(PairActivity.econsumer_name, econsumer);
             startActivity(i);
+
+            DashboardActivity.adhaar=et2.getText().toString();
+            DashboardActivity.registered=true;
+
+
+            databaseReference= FirebaseDatabase.getInstance().getReference(et2.getText().toString());
+            databaseReference.child("NAME").setValue(et1.getText().toString());
+            databaseReference.child("ADHAAR NUMBER").setValue(et2.getText().toString());
+            databaseReference.child("CONSUMER NUMBER").setValue(et4.getText().toString());
+            databaseReference= FirebaseDatabase.getInstance().getReference("USER LOGIN DETAILS");
+            databaseReference.child("LOGIN PASSWORD").setValue(et2.getText().toString().substring(0,5)+et4.getText().toString().substring(5,10));
+
+
+            databaseReference= FirebaseDatabase.getInstance().getReference(et2.getText().toString()).child("ECOMODE STATUS");
+            databaseReference.child("WATER HEATER").setValue("waterheater_false");
+            databaseReference.child("IRON BOX").setValue("ironbox_false");
+            databaseReference.child("OUTSIDE LIGHT").setValue("outsidelight_false");
+            databaseReference.child("BEDROOM LIGHT").setValue("bedroomlight_false");
+            databaseReference.child("WATER MOTOR").setValue("watermotor_false");
+            databaseReference.child("BEDROOM FAN").setValue("bedroomfan_false");
+            databaseReference.child("WASHING MACHINE").setValue("washingmachine_false");
+
+            databaseReference= FirebaseDatabase.getInstance().getReference(et2.getText().toString()).child("DEVICE STATUS");
+            databaseReference.child("WATER HEATER").setValue("waterheater_false");
+            databaseReference.child("IRON BOX").setValue("ironbox_false");
+            databaseReference.child("OUTSIDE LIGHT").setValue("outsidelight_false");
+            databaseReference.child("BEDROOM LIGHT").setValue("bedroomlight_false");
+            databaseReference.child("WATER MOTOR").setValue("watermotor_false");
+            databaseReference.child("BEDROOM FAN").setValue("bedroomfan_false");
+            databaseReference.child("WASHING MACHINE").setValue("washingmachine_false");
+
+
+
+
+
         } else {
             Toast.makeText(getApplicationContext(), "Enter Valid Credentials", Toast.LENGTH_SHORT).show();
         }
@@ -237,6 +277,9 @@ public class RegisterActivity extends AppCompatActivity {
             case 4:
                 if (cmd.equals("yes"))
                     register(reg);
+
+
+
                 break;
         }
         Toast.makeText(getApplicationContext(), cmd, Toast.LENGTH_SHORT).show();

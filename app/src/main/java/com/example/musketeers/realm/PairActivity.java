@@ -14,6 +14,7 @@ public class PairActivity extends AppCompatActivity {
 
     public static final String aadhar_name ="aadhar", econsumer_name = "econsumer";
     String pair_id;
+    String aadhar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,7 +24,7 @@ public class PairActivity extends AppCompatActivity {
         pairId = findViewById(R.id.pair_id);
         pair = findViewById(R.id.pair);
 
-        String aadhar = getIntent().getStringExtra(aadhar_name);
+        aadhar = getIntent().getStringExtra(aadhar_name);
         String econsumer = getIntent().getStringExtra(econsumer_name);
 
         pair_id = aadhar + econsumer;
@@ -32,6 +33,7 @@ public class PairActivity extends AppCompatActivity {
 
     public void pair(View view) {
         Intent i = new Intent(this, DashboardActivity.class);
+        i.putExtra("ADHAAR",aadhar);
         startActivity(i);
     }
 }
