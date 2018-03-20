@@ -6,15 +6,16 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class PairActivity extends AppCompatActivity {
 
     TextView pairId;
     ImageView pair;
 
-    public static final String aadhar_name ="aadhar", econsumer_name = "econsumer";
+    public static final String aadhar_name ="aadhar", econsumer_name = "econsumer" ;
     String pair_id;
-    String aadhar;
+    String aadhar,passcode_pass,KEY;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,13 +28,18 @@ public class PairActivity extends AppCompatActivity {
         aadhar = getIntent().getStringExtra(aadhar_name);
         String econsumer = getIntent().getStringExtra(econsumer_name);
 
+      KEY= getIntent().getStringExtra("KEY");
+
         pair_id = aadhar + econsumer;
         pairId.setText(pair_id);
+
+
     }
 
     public void pair(View view) {
         Intent i = new Intent(this, DashboardActivity.class);
-        i.putExtra("ADHAAR",aadhar);
+        i.putExtra("KEY",KEY);
         startActivity(i);
+        Toast.makeText(getApplicationContext(),""+KEY,Toast.LENGTH_LONG).show();
     }
 }

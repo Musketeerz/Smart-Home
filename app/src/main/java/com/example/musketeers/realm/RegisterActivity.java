@@ -1,8 +1,11 @@
 package com.example.musketeers.realm;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
 import android.support.design.widget.FloatingActionButton;
@@ -20,8 +23,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -38,6 +44,9 @@ public class RegisterActivity extends AppCompatActivity {
     private String command, reply;
     int field = 1;
     DatabaseReference databaseReference;
+    Dialog myDialog;
+    ArrayList<String> login_details=new ArrayList<>();
+    String passcode_pass;
 
     GPSTracker gps;
     private final int REQ_CODE_SPEECH_INPUT = 100;
@@ -57,6 +66,31 @@ public class RegisterActivity extends AppCompatActivity {
         et4 = findViewById(R.id.econsumerField);
         fab = findViewById(R.id.speak);
         reg = findViewById(R.id.reg);
+
+        myDialog = new Dialog(this);
+
+        databaseReference= FirebaseDatabase.getInstance().getReference("USER LOGIN DETAILS");
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot child:dataSnapshot.getChildren()) {
+                    String usrs = child.getValue(String.class);
+
+                    login_details.add(usrs);
+                }
+
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+
+
 
 
         try {
@@ -97,24 +131,34 @@ public class RegisterActivity extends AppCompatActivity {
         econsumer = et4.getText().toString();
 
         if ((!name.isEmpty()) && (!aadhar.isEmpty()) && (aadhar.length() > 11) && (!econsumer.isEmpty()) && (econsumer.length() > 9) && (location != null)) {
+
+            passcode_pass=et2.getText().toString().substring(0,5)+et4.getText().toString().substring(5,10);
+
             Intent i = new Intent(this, PairActivity.class);
             i.putExtra(PairActivity.aadhar_name, aadhar);
             i.putExtra(PairActivity.econsumer_name, econsumer);
+
+            String KEY=et2.getText().toString().substring(0,5)+et4.getText().toString().substring(5,10);
+            i.putExtra("KEY",KEY);
+
             startActivity(i);
 
-            DashboardActivity.adhaar=et2.getText().toString();
-            DashboardActivity.registered=true;
 
 
-            databaseReference= FirebaseDatabase.getInstance().getReference(et2.getText().toString());
+
+
+            databaseReference= FirebaseDatabase.getInstance().getReference(et2.getText().toString().substring(0,5)+et4.getText().toString().substring(5,10));
             databaseReference.child("NAME").setValue(et1.getText().toString());
             databaseReference.child("ADHAAR NUMBER").setValue(et2.getText().toString());
             databaseReference.child("CONSUMER NUMBER").setValue(et4.getText().toString());
             databaseReference= FirebaseDatabase.getInstance().getReference("USER LOGIN DETAILS");
-            databaseReference.child("LOGIN PASSWORD").setValue(et2.getText().toString().substring(0,5)+et4.getText().toString().substring(5,10));
+            databaseReference.child(et2.getText().toString().substring(0,5)+et4.getText().toString().substring(5,10)).setValue(et2.getText().toString().substring(0,5)+et4.getText().toString().substring(5,10));
 
 
-            databaseReference= FirebaseDatabase.getInstance().getReference(et2.getText().toString()).child("ECOMODE STATUS");
+
+
+
+            databaseReference= FirebaseDatabase.getInstance().getReference(et2.getText().toString().substring(0,5)+et4.getText().toString().substring(5,10)).child("ECOMODE STATUS");
             databaseReference.child("WATER HEATER").setValue("waterheater_false");
             databaseReference.child("IRON BOX").setValue("ironbox_false");
             databaseReference.child("OUTSIDE LIGHT").setValue("outsidelight_false");
@@ -123,7 +167,7 @@ public class RegisterActivity extends AppCompatActivity {
             databaseReference.child("BEDROOM FAN").setValue("bedroomfan_false");
             databaseReference.child("WASHING MACHINE").setValue("washingmachine_false");
 
-            databaseReference= FirebaseDatabase.getInstance().getReference(et2.getText().toString()).child("DEVICE STATUS");
+            databaseReference= FirebaseDatabase.getInstance().getReference(et2.getText().toString().substring(0,5)+et4.getText().toString().substring(5,10)).child("DEVICE STATUS");
             databaseReference.child("WATER HEATER").setValue("waterheater_false");
             databaseReference.child("IRON BOX").setValue("ironbox_false");
             databaseReference.child("OUTSIDE LIGHT").setValue("outsidelight_false");
@@ -289,5 +333,43 @@ public class RegisterActivity extends AppCompatActivity {
         else {
             field = 1;
         }
+    }
+
+    public void existing_user(View view)
+    {
+        TextView sync;
+        final EditText adhaar,consumer;
+        myDialog.setContentView(R.layout.login_popup);
+         sync= (TextView) myDialog.findViewById(R.id.sync);
+        adhaar= (EditText) myDialog.findViewById(R.id.adhaar);
+        consumer= (EditText) myDialog.findViewById(R.id.consumer);
+
+        myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        myDialog.show();
+        sync.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String login=adhaar.getText().toString()+consumer.getText().toString();
+                if (login_details.contains(login))
+                {
+
+                    Intent nxt=new Intent(RegisterActivity.this,DashboardActivity.class);
+                    nxt.putExtra("KEY", login);
+                    startActivity(nxt);
+
+
+
+                }
+                else
+                {
+                    Toast.makeText(getApplicationContext(),"Wroung Passcode",Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+
+
+
+
     }
 }
