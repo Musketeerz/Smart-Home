@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.musketeers.realm.RegisterActivity">
+    tools:context="com.example.musketeers.realm.RegisterActivity"
+    android:focusableInTouchMode="true"
+    >
 
 
     <EditText
@@ -44,6 +46,7 @@
             android:layout_height="@dimen/etheight"
             android:layout_weight="5.25"
             android:textSize="18sp"
+
             android:hint=" Home Location"/>
 
         <ImageView

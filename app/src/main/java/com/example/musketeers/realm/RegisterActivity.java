@@ -1,9 +1,13 @@
 package com.example.musketeers.realm;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.speech.RecognizerIntent;
@@ -14,6 +18,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.test.mock.MockPackageManager;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -54,6 +59,8 @@ public class RegisterActivity extends AppCompatActivity {
 
     private static final int REQUEST_CODE_PERMISSION = 2;
     String mPermission = Manifest.permission.ACCESS_FINE_LOCATION;
+    public SQLiteDatabase db;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,6 +141,26 @@ public class RegisterActivity extends AppCompatActivity {
 
             passcode_pass=et2.getText().toString().substring(0,5)+et4.getText().toString().substring(5,10);
 
+
+            String sno="1";
+
+
+            db = openOrCreateDatabase("REGISTRATION_STATUS", Context.MODE_PRIVATE, null);
+            Cursor c = db.rawQuery("SELECT * FROM reg", null);
+
+                db.execSQL("INSERT INTO reg VALUES('" + sno + "','" +passcode_pass + "');");
+
+
+
+
+
+
+
+
+
+
+
+
             Intent i = new Intent(this, PairActivity.class);
             i.putExtra(PairActivity.aadhar_name, aadhar);
             i.putExtra(PairActivity.econsumer_name, econsumer);
@@ -144,13 +171,17 @@ public class RegisterActivity extends AppCompatActivity {
             startActivity(i);
 
 
+//            databaseReference= FirebaseDatabase.getInstance().getReference(passcode_pass).child("LOGIN STATUS");
+//            databaseReference.child("LOGIN STATUS").setValue("true");
 
 
 
-            databaseReference= FirebaseDatabase.getInstance().getReference(et2.getText().toString().substring(0,5)+et4.getText().toString().substring(5,10));
+
+            databaseReference= FirebaseDatabase.getInstance().getReference(et2.getText().toString().substring(0,5)+et4.getText().toString().substring(5,10)).child("USER DETAILS");
             databaseReference.child("NAME").setValue(et1.getText().toString());
             databaseReference.child("ADHAAR NUMBER").setValue(et2.getText().toString());
             databaseReference.child("CONSUMER NUMBER").setValue(et4.getText().toString());
+
             databaseReference= FirebaseDatabase.getInstance().getReference("USER LOGIN DETAILS");
             databaseReference.child(et2.getText().toString().substring(0,5)+et4.getText().toString().substring(5,10)).setValue(et2.getText().toString().substring(0,5)+et4.getText().toString().substring(5,10));
 
@@ -350,20 +381,36 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String login=adhaar.getText().toString()+consumer.getText().toString();
-                if (login_details.contains(login))
-                {
 
-                    Intent nxt=new Intent(RegisterActivity.this,DashboardActivity.class);
-                    nxt.putExtra("KEY", login);
-                    startActivity(nxt);
+//                    db = openOrCreateDatabase("REGISTRATION_STATUS", Context.MODE_PRIVATE, null);
+//
+//                    Cursor c = db.rawQuery("SELECT * FROM reg", null);
 
 
+                        if (login_details.contains(login))
+                        {
+                            String sno="1";
+                            db = openOrCreateDatabase("REGISTRATION_STATUS", Context.MODE_PRIVATE, null);
+                            Cursor c = db.rawQuery("SELECT * FROM reg", null);
 
-                }
-                else
-                {
-                    Toast.makeText(getApplicationContext(),"Wroung Passcode",Toast.LENGTH_SHORT).show();
-                }
+                            db.execSQL("INSERT INTO reg VALUES('" + sno + "','" +login + "');");
+
+
+//                            databaseReference= FirebaseDatabase.getInstance().getReference(login).child("LOGIN STATUS");
+//                            databaseReference.child("LOGIN STATUS").setValue("true");
+
+                            Intent nxt = new Intent(RegisterActivity.this, DashboardActivity.class);
+                            nxt.putExtra("KEY", login);
+                            startActivity(nxt);
+                        }
+                        else
+                        {
+                            Toast.makeText(getApplicationContext(),"Wroung Passcode",Toast.LENGTH_SHORT).show();
+                        }
+
+
+
+
 
             }
         });
@@ -372,4 +419,43 @@ public class RegisterActivity extends AppCompatActivity {
 
 
     }
+
+
+
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            //Toast.makeText(Update_Product_Details.this,"Back Prohibitted",Toast.LENGTH_SHORT).show();
+            Intent nxt = new Intent(Intent.ACTION_MAIN);
+            nxt.addCategory(Intent.CATEGORY_HOME);
+            nxt.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(nxt);
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+
+    public void Click(View v) {
+        db = openOrCreateDatabase("REGISTER_STATUS", Context.MODE_PRIVATE, null);
+        Cursor c = db.rawQuery("SELECT * FROM reg", null);
+        if (c.getCount() == 0) {
+            showMessage("Error", "No records found");
+            return;
+        }
+        StringBuffer buffer = new StringBuffer();
+        while (c.moveToNext()) {
+            buffer.append("Sno " + c.getString(0) + "\n");
+            buffer.append("Status " + c.getString(1) + "\n");
+            buffer.append("Passcode " + c.getString(2) + "\n\n");
+        }
+        showMessage("User status", buffer.toString());
+    }
+    public void showMessage(String title, String message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setCancelable(true);
+        builder.setTitle(title);
+        builder.setMessage(message);
+        builder.show();
+    }
+
+
 }

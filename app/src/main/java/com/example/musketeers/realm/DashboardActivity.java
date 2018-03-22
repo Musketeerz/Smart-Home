@@ -1,7 +1,12 @@
 package com.example.musketeers.realm;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
 import android.support.annotation.NonNull;
@@ -16,6 +21,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
@@ -35,12 +41,18 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
     DrawerLayout drawer;
     private TextToSpeech tts;
     ArrayList<String> device_status=new ArrayList<>();
+    ArrayList<String> name=new ArrayList<>();
+    ArrayList<String> login_status=new ArrayList<>();
 
     private final int REQ_CODE_SPEECH_INPUT = 100;
     private String command, reply;
     DatabaseReference databaseReference;
     public static Boolean registered=false;
-    public String passcode_pass;
+    public String passcode_pass="1234556789";
+    public SQLiteDatabase db;
+    Cursor c;
+    String sno = "1";
+    Dialog myDialog;
 
 
 
@@ -58,6 +70,46 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
         setContentView(R.layout.activity_dashboard_main);
 
         passcode_pass = getIntent().getStringExtra("KEY");
+
+        myDialog = new Dialog(this);
+        myDialog.setContentView(R.layout.activity_dashboard_main);
+        final TextView user_name=(TextView)myDialog.findViewById(R.id.name);
+
+        try {
+            db = openOrCreateDatabase("REGISTRATION_STATUS", Context.MODE_PRIVATE, null);
+            db.execSQL("CREATE TABLE IF NOT EXISTS reg(sno VARCHAR,passcode VARCHAR);");
+             c = db.rawQuery("SELECT * FROM reg", null);
+            if (c.getCount() == 0) {
+
+                 Intent nxt=new Intent(DashboardActivity.this,RegisterActivity.class);
+                 startActivity(nxt);
+
+              //  showMessage("Oops", "No records");
+
+                return;
+            }
+            else
+            {
+                String a="1";
+
+
+               c = db.rawQuery("SELECT * FROM reg WHERE sno='" + a + "'", null);
+                if (c.moveToFirst()) {
+                    passcode_pass=c.getString(1);
+
+                }
+
+
+            }
+
+
+        }
+        catch (Exception e)
+        {
+            Toast.makeText(getApplicationContext(),
+                   "Database Failure",
+                    Toast.LENGTH_SHORT).show();
+        }
 
 
 
@@ -105,6 +157,108 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
                 }
             }
         });
+
+
+//        databaseReference= FirebaseDatabase.getInstance().getReference("LOGIN STATUS "+passcode_pass);
+//                databaseReference.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                for (DataSnapshot child:dataSnapshot.getChildren()) {
+//                    String usrs = child.getValue(String.class);
+//
+//                   login_status.add(usrs);
+//
+//                    String[] arr=usrs.split("_");
+//
+//                    if (arr[0].equals(passcode_pass))
+//                    {
+//                        if (arr[1].equals("false"))
+//                        {
+//                            showMessage("Logged Out", "Registered User Logged out from System");
+//                            Intent nxt=new Intent(DashboardActivity.this,RegisterActivity.class);
+//                            startActivity(nxt);
+//
+//                        }
+//
+//                    }
+//
+//
+//                }
+//
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
+
+//        databaseReference= FirebaseDatabase.getInstance().getReference(passcode_pass).child("LOGIN STATUS");
+//        databaseReference.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                for (DataSnapshot child:dataSnapshot.getChildren()) {
+//                    String usrs = child.getValue(String.class);
+//                   // name.add(usrs);
+//                    if (usrs.equals("false"))
+//                    {
+//                        showMessage("Logged Out", "Registered User Logged out from System");
+//                        Intent nxt=new Intent(DashboardActivity.this,RegisterActivity.class);
+//                        startActivity(nxt);
+//                    }
+//
+//
+//
+//
+//                }
+//               // showMessage("Name", ""+name.get(2));
+//                //  user_name.setText(name.get(2));
+//
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
+
+
+
+
+
+//        databaseReference= FirebaseDatabase.getInstance().getReference(passcode_pass).child("USER DETAILS");
+//        databaseReference.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                for (DataSnapshot child:dataSnapshot.getChildren()) {
+//                    String usrs = child.getValue(String.class);
+//                    name.add(usrs);
+//
+//
+//
+//
+//                }
+//                showMessage("Name", ""+name.get(2));
+//
+//                if(name.get(3).equals("false"))
+//                {
+//                    Intent nxt=new Intent(DashboardActivity.this,RegisterActivity.class);
+//                    startActivity(nxt);
+//                }
+//              //  user_name.setText(name.get(2));
+//
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
+
+
 
         databaseReference= FirebaseDatabase.getInstance().getReference(passcode_pass).child("DEVICE STATUS");
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -248,6 +402,8 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
             public void onCancelled(DatabaseError databaseError) {
             }
         });
+
+
     }
 
     public void ecoMode(View view) {
@@ -949,4 +1105,44 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+
+    public void onClick(View v) {
+
+//        databaseReference= FirebaseDatabase.getInstance().getReference(passcode_pass).child("LOGIN STATUS");
+//        databaseReference.child("LOGIN STATUS").setValue("false");
+
+
+//        databaseReference=FirebaseDatabase.getInstance().getReference().child(passcode_pass);
+//        databaseReference.removeValue();
+//
+//
+//        databaseReference=FirebaseDatabase.getInstance().getReference().child("USER LOGIN DETAILS");
+//        databaseReference.child(passcode_pass).removeValue();
+
+
+
+
+        db = openOrCreateDatabase("REGISTRATION_STATUS", Context.MODE_PRIVATE, null);
+
+         c = db.rawQuery("SELECT * FROM reg WHERE sno='" + sno + "'", null);
+        if (c.moveToFirst()) {
+            db.execSQL("DELETE FROM reg WHERE sno='" + sno + "'");
+            showMessage("Success", "Successfully Logged Out");
+
+
+            Intent nxt=new Intent(DashboardActivity.this,RegisterActivity.class);
+            startActivity(nxt);
+        }
+
+
+    }
+    public void showMessage(String title, String message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setCancelable(true);
+        builder.setTitle(title);
+        builder.setMessage(message);
+        builder.show();
+    }
+
 }
