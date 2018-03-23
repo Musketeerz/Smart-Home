@@ -10,9 +10,10 @@
         android:id="@+id/tick"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp"
-        android:src="@drawable/tick"/>
+        android:layout_marginTop="30dp"
+        android:src="@drawable/tick" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -22,17 +23,19 @@
         android:text="Register successful"
         android:layout_marginTop="10dp"
         android:textSize="18sp"
-        android:textColor="@color/colorPrimaryDark"/>
+        android:textColor="@color/colorPrimaryDark"
+        android:id="@+id/textView" />
 
     <TextView
+        android:id="@+id/unique"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/textView"
         android:layout_centerHorizontal="true"
-        android:layout_above="@id/pair_id"
-        android:layout_marginBottom="6dp"
-        android:text="Unique ID:"
-        android:textStyle="bold"
-        android:textSize="18sp"/>
+        android:layout_marginTop="48dp"
+        android:text="Scratch here to get Passcode"
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/pair_id"
@@ -41,11 +44,20 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_centerInParent="true"
-        android:background="@color/colorPrimaryLight"
-        android:textColor="@color/colorPrimaryDark"
-        android:text="Confirm"
+        android:textColor="#b67070"
+        android:text="22-22-22-22-22"
         android:gravity="center"
-        android:textSize="22sp"/>
+        android:textSize="35sp"/>
+
+    <com.dynamitechetan.fogviewlibrary.FogView
+        android:layout_below="@+id/unique"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="65dp"
+        app:fog_image="@drawable/fog_dense"
+        app:stroke_width="100" />
 
     <TextView
         android:layout_width="300dp"
@@ -54,16 +66,6 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"
         android:textSize="17sp"
-        android:text="Note:\n1. Enter Unique ID in Home Control Tab.\n2. Pair Home Control Tab via Bluetooth."/>
-
-    <ImageView
-        android:id="@+id/pair"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/pair"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="50dp"
-        android:onClick="pair"/>
+        android:text="Note:\n\n1.Enter Pairing code in Home Control.\n\n2.Sync Home Control with device.\n\n3.Then you will be taken to Mainscreen Automatically"/>
 
 </RelativeLayout>
