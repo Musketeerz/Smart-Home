@@ -180,7 +180,9 @@ public class RegisterActivity extends AppCompatActivity {
             databaseReference= FirebaseDatabase.getInstance().getReference(et2.getText().toString().substring(0,5)+et4.getText().toString().substring(5,10)).child("USER DETAILS");
             databaseReference.child("NAME").setValue(et1.getText().toString());
             databaseReference.child("ADHAAR NUMBER").setValue(et2.getText().toString());
+
             databaseReference.child("CONSUMER NUMBER").setValue(et4.getText().toString());
+            databaseReference.child("PAIR STATUS").setValue("false");
 
             databaseReference= FirebaseDatabase.getInstance().getReference("USER LOGIN DETAILS");
             databaseReference.child(et2.getText().toString().substring(0,5)+et4.getText().toString().substring(5,10)).setValue(et2.getText().toString().substring(0,5)+et4.getText().toString().substring(5,10));
@@ -190,22 +192,22 @@ public class RegisterActivity extends AppCompatActivity {
 
 
             databaseReference= FirebaseDatabase.getInstance().getReference(et2.getText().toString().substring(0,5)+et4.getText().toString().substring(5,10)).child("ECOMODE STATUS");
-            databaseReference.child("WATER HEATER").setValue("waterheater_false");
-            databaseReference.child("IRON BOX").setValue("ironbox_false");
-            databaseReference.child("OUTSIDE LIGHT").setValue("outsidelight_false");
-            databaseReference.child("BEDROOM LIGHT").setValue("bedroomlight_false");
-            databaseReference.child("WATER MOTOR").setValue("watermotor_false");
-            databaseReference.child("BEDROOM FAN").setValue("bedroomfan_false");
-            databaseReference.child("WASHING MACHINE").setValue("washingmachine_false");
+            databaseReference.child("WATER HEATER").setValue("Water Heater_false");
+            databaseReference.child("IRON BOX").setValue("Iron Box_false");
+            databaseReference.child("OUTSIDE LIGHT").setValue("Outside Light_false");
+            databaseReference.child("BEDROOM LIGHT").setValue("Bedroom Light_false");
+            databaseReference.child("WATER MOTOR").setValue("Water Motor_false");
+            databaseReference.child("BEDROOM FAN").setValue("Bedroom Fan_false");
+            databaseReference.child("WASHING MACHINE").setValue("Washing Machine_false");
 
             databaseReference= FirebaseDatabase.getInstance().getReference(et2.getText().toString().substring(0,5)+et4.getText().toString().substring(5,10)).child("DEVICE STATUS");
-            databaseReference.child("WATER HEATER").setValue("waterheater_false");
-            databaseReference.child("IRON BOX").setValue("ironbox_false");
-            databaseReference.child("OUTSIDE LIGHT").setValue("outsidelight_false");
-            databaseReference.child("BEDROOM LIGHT").setValue("bedroomlight_false");
-            databaseReference.child("WATER MOTOR").setValue("watermotor_false");
-            databaseReference.child("BEDROOM FAN").setValue("bedroomfan_false");
-            databaseReference.child("WASHING MACHINE").setValue("washingmachine_false");
+            databaseReference.child("WATER HEATER").setValue("Water Heater_false");
+            databaseReference.child("IRON BOX").setValue("Iron Box_false");
+            databaseReference.child("OUTSIDE LIGHT").setValue("Outside Light_false");
+            databaseReference.child("BEDROOM LIGHT").setValue("Bedroom Light_false");
+            databaseReference.child("WATER MOTOR").setValue("Water Motor_false");
+            databaseReference.child("BEDROOM FAN").setValue("Bedroom Fan_false");
+            databaseReference.child("WASHING MACHINE").setValue("Washing Machine_false");
 
 
 
