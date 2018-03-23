@@ -9,6 +9,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
+import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -16,10 +18,10 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ListView;
+import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
@@ -34,77 +36,118 @@ import java.util.Locale;
 
 public class DashboardActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    private ToggleButton eco;
+    private ToggleButton eco, eHeater, eIron, eOutLight, eBedLight, eMotor, eBedFan, eWash;
+    private Switch heater, iron, outLight, bedLight, motor, bedFan, wash;
     DrawerLayout drawer;
     private TextToSpeech tts;
-    ArrayList<String> device_status = new ArrayList<>();
-    ArrayList<String> name_voice = new ArrayList<>();
-    ArrayList<String> name1 = new ArrayList<>();
-
-    ArrayList<Word> appliances = new ArrayList<>();
-
-    ArrayList<Integer> a_thumb = new ArrayList<>();
-    ArrayList<String> a_name = new ArrayList<>();
-    ArrayList<Boolean> a_switch = new ArrayList<>();
-    ArrayList<Boolean> a_eco = new ArrayList<>();
-
-    WordAdapter adapter;
-    ListView applianceListView;
+    ArrayList<String> device_status=new ArrayList<>();
+    ArrayList<String> name=new ArrayList<>();
+    ArrayList<String> login_status=new ArrayList<>();
 
     private final int REQ_CODE_SPEECH_INPUT = 100;
     private String command, reply;
     DatabaseReference databaseReference;
-    public static String passcode_pass = "1234556789";
-    public int pass = 0, all = 0;
+    public static Boolean registered=false;
+    public String passcode_pass="1234556789";
     public SQLiteDatabase db;
     Cursor c;
     String sno = "1";
     Dialog myDialog;
 
+
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
+
+
+
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard_main);
+
         passcode_pass = getIntent().getStringExtra("KEY");
 
         myDialog = new Dialog(this);
         myDialog.setContentView(R.layout.activity_dashboard_main);
+        final TextView user_name=(TextView)myDialog.findViewById(R.id.name);
 
         try {
             db = openOrCreateDatabase("REGISTRATION_STATUS", Context.MODE_PRIVATE, null);
             db.execSQL("CREATE TABLE IF NOT EXISTS reg(sno VARCHAR,passcode VARCHAR);");
-            c = db.rawQuery("SELECT * FROM reg", null);
+             c = db.rawQuery("SELECT * FROM reg", null);
             if (c.getCount() == 0) {
-                Intent nxt = new Intent(DashboardActivity.this,RegisterActivity.class);
-                startActivity(nxt);
+
+                 Intent nxt=new Intent(DashboardActivity.this,RegisterActivity.class);
+                 startActivity(nxt);
+
+              //  showMessage("Oops", "No records");
+
                 return;
             }
-            else {
-                String a = "1";
-                c = db.rawQuery("SELECT * FROM reg WHERE sno='" + a + "'", null);
+            else
+            {
+                String a="1";
+
+
+               c = db.rawQuery("SELECT * FROM reg WHERE sno='" + a + "'", null);
                 if (c.moveToFirst()) {
                     passcode_pass=c.getString(1);
-                    Log.d("pass", "pass: " + passcode_pass);
+
                 }
+
+
             }
+
+
         }
-        catch (Exception e) {
-            Toast.makeText(getApplicationContext(), "Database Failure", Toast.LENGTH_SHORT).show();
+        catch (Exception e)
+        {
+            Toast.makeText(getApplicationContext(),
+                   "Database Failure",
+                    Toast.LENGTH_SHORT).show();
         }
 
+
+
         eco = findViewById(R.id.eco);
-        applianceListView = findViewById(R.id.list);
+        eHeater = findViewById(R.id.eheater);
+        eIron = findViewById(R.id.eiron);
+        eOutLight = findViewById(R.id.eoutlight);
+        eBedLight = findViewById(R.id.ebedlight);
+        eMotor = findViewById(R.id.emotor);
+        eBedFan = findViewById(R.id.ebedfan);
+        eWash = findViewById(R.id.ewash);
+
+        heater = findViewById(R.id.heater);
+        iron = findViewById(R.id.iron);
+        outLight = findViewById(R.id.outlight);
+        bedLight = findViewById(R.id.bedlight);
+        motor = findViewById(R.id.motor);
+        bedFan = findViewById(R.id.bedfan);
+        wash = findViewById(R.id.wash);
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         drawer = findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        eco.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                command(eco);
+            }
+        });
 
         tts = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
@@ -115,95 +158,172 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
             }
         });
 
-        databaseReference= FirebaseDatabase.getInstance().getReference(passcode_pass).child("USER DETAILS");
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot child:dataSnapshot.getChildren()) {
-                    String usrs = child.getValue(String.class);
-                    name1.add(usrs);
-                }
-                if(name1.get(3).equals("false")) {
-                    db = openOrCreateDatabase("REGISTRATION_STATUS", Context.MODE_PRIVATE, null);
-                    c = db.rawQuery("SELECT * FROM reg WHERE sno='" + sno + "'", null);
-                    if (c.moveToFirst()) {
-                        db.execSQL("DELETE FROM reg WHERE sno='" + sno + "'");
-                        showMessage("Logged Out from Home Control", "Synchronisation Failed");
-                        Intent nxt=new Intent(DashboardActivity.this,RegisterActivity.class);
-                        startActivity(nxt);
-                    }
-                } else {
-                    name1.clear();
-                }
-            }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
+//        databaseReference= FirebaseDatabase.getInstance().getReference("LOGIN STATUS "+passcode_pass);
+//                databaseReference.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                for (DataSnapshot child:dataSnapshot.getChildren()) {
+//                    String usrs = child.getValue(String.class);
+//
+//                   login_status.add(usrs);
+//
+//                    String[] arr=usrs.split("_");
+//
+//                    if (arr[0].equals(passcode_pass))
+//                    {
+//                        if (arr[1].equals("false"))
+//                        {
+//                            showMessage("Logged Out", "Registered User Logged out from System");
+//                            Intent nxt=new Intent(DashboardActivity.this,RegisterActivity.class);
+//                            startActivity(nxt);
+//
+//                        }
+//
+//                    }
+//
+//
+//                }
+//
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
+
+//        databaseReference= FirebaseDatabase.getInstance().getReference(passcode_pass).child("LOGIN STATUS");
+//        databaseReference.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                for (DataSnapshot child:dataSnapshot.getChildren()) {
+//                    String usrs = child.getValue(String.class);
+//                   // name.add(usrs);
+//                    if (usrs.equals("false"))
+//                    {
+//                        showMessage("Logged Out", "Registered User Logged out from System");
+//                        Intent nxt=new Intent(DashboardActivity.this,RegisterActivity.class);
+//                        startActivity(nxt);
+//                    }
+//
+//
+//
+//
+//                }
+//               // showMessage("Name", ""+name.get(2));
+//                //  user_name.setText(name.get(2));
+//
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
+
+
+
+
+
+//        databaseReference= FirebaseDatabase.getInstance().getReference(passcode_pass).child("USER DETAILS");
+//        databaseReference.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                for (DataSnapshot child:dataSnapshot.getChildren()) {
+//                    String usrs = child.getValue(String.class);
+//                    name.add(usrs);
+//
+//
+//
+//
+//                }
+//                showMessage("Name", ""+name.get(2));
+//
+//                if(name.get(3).equals("false"))
+//                {
+//                    Intent nxt=new Intent(DashboardActivity.this,RegisterActivity.class);
+//                    startActivity(nxt);
+//                }
+//              //  user_name.setText(name.get(2));
+//
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
+
+
 
         databaseReference= FirebaseDatabase.getInstance().getReference(passcode_pass).child("DEVICE STATUS");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                int count = 0;
-                for (DataSnapshot child:dataSnapshot.getChildren()) {
+                for (DataSnapshot child:dataSnapshot.getChildren())
+                {
                     String usrs = child.getValue(String.class);
                     device_status.clear();
                     device_status.add(usrs);
 
                     String[] check = usrs.split("_");
-                    Boolean swit = Boolean.parseBoolean(check[1]);
-                    if (pass < 2) {
-                        a_name.add(count, check[0]);
-                        name_voice.add(count, check[0].toLowerCase());
-                        a_switch.add(count, swit);
-                        Log.d("Initial", "initial: " + pass);
-                    } else {
-                        a_name.set(count, check[0]);
-                        name_voice.set(count, check[0].toLowerCase());
-                        a_switch.set(count, swit);
-                        appliances.clear();
-                        adapter.notifyDataSetChanged();
-                        Log.d("change", "onDataChange: " + pass);
-                    }
-                    Log.d("Appliances", "Appliance: " + a_name.get(count));
 
                     switch (check[0]) {
-                        case "Water Heater":
-                            if (pass < 2)
-                                a_thumb.add(count, R.drawable.waterheater);
+                        case "waterheater":
+                            if (check[1].equals("true")) {
+                                heater.setChecked(true);
+                            } else if (check[1].equals("false")) {
+                                heater.setChecked(false);
+                            }
                             break;
-                        case "Iron Box":
-                            if (pass < 2)
-                                a_thumb.add(count, R.drawable.iron);
+                        case "ironbox":
+                            if (check[1].equals("true")) {
+                                iron.setChecked(true);
+                            } else if (check[1].equals("false")) {
+                                iron.setChecked(false);
+                            }
                             break;
-                        case "Bedroom Light":
-                            if (pass < 2)
-                                a_thumb.add(count, R.drawable.lightbulb);
+                        case "bedroomlight":
+                            if (check[1].equals("true")) {
+                                bedLight.setChecked(true);
+                            } else if (check[1].equals("false")) {
+                                bedLight.setChecked(false);
+                            }
                             break;
-                        case "Bedroom Fan":
-                            if (pass < 2)
-                                a_thumb.add(count, R.drawable.fan);
+                        case "bedroomfan":
+                            if (check[1].equals("true")) {
+                                bedFan.setChecked(true);
+                            } else if (check[1].equals("false")) {
+                                bedFan.setChecked(false);
+                            }
                             break;
-                        case "Washing Machine":
-                            if (pass < 2)
-                                a_thumb.add(count, R.drawable.wash);
+                        case "washingmachine":
+                            if (check[1].equals("true")) {
+                                wash.setChecked(true);
+                            } else if (check[1].equals("false")) {
+                                wash.setChecked(false);
+                            }
                             break;
-                        case "Water Motor":
-                            if (pass < 2)
-                                a_thumb.add(count, R.drawable.water);
+                        case "watermotor":
+                            if (check[1].equals("true")) {
+                                motor.setChecked(true);
+                            } else if (check[1].equals("false")) {
+                                motor.setChecked(false);
+                            }
                             break;
-                        case "Outside Light":
-                            if (pass < 2)
-                                a_thumb.add(count, R.drawable.streetlamps);
+                        case "outsidelight":
+                            if (check[1].equals("true")) {
+                                outLight.setChecked(true);
+                            } else if (check[1].equals("false")) {
+                                outLight.setChecked(false);
+                            }
                             break;
                     }
-                    count++;
                 }
-                all++;
-                pass++;
-                refresh();
             }
 
             @Override
@@ -216,74 +336,207 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                int count = 0;
-                for (DataSnapshot child:dataSnapshot.getChildren()) {
+                for (DataSnapshot child:dataSnapshot.getChildren() )
+                {
                     String usrs = child.getValue(String.class);
                     device_status.clear();
                     device_status.add(usrs);
 
                     String[] check = usrs.split("_");
 
-                    Boolean swit = Boolean.parseBoolean(check[1]);
-                    if (pass < 2)
-                        a_eco.add(count, swit);
-                    else {
-                        a_eco.set(count, swit);
-                        appliances.clear();
-                        adapter.notifyDataSetChanged();
+                    switch (check[0]) {
+                        case "waterheater":
+                            if (check[1].equals("true")) {
+                                eHeater.setChecked(true);
+                            } else if (check[1].equals("false")) {
+                                eHeater.setChecked(false);
+                            }
+                            break;
+                        case "ironbox":
+                            if (check[1].equals("true")) {
+                                eIron.setChecked(true);
+                            } else if (check[1].equals("false")) {
+                                eIron.setChecked(false);
+                            }
+                            break;
+                        case "bedroomlight":
+                            if (check[1].equals("true")) {
+                                eBedLight.setChecked(true);
+                            } else if (check[1].equals("false")) {
+                                eBedLight.setChecked(false);
+                            }
+                            break;
+                        case "bedroomfan":
+                            if (check[1].equals("true")) {
+                                eBedFan.setChecked(true);
+                            } else if (check[1].equals("false")) {
+                                eBedFan.setChecked(false);
+                            }
+                            break;
+                        case "washingmachine":
+                            if (check[1].equals("true")) {
+                                eWash.setChecked(true);
+                            } else if (check[1].equals("false")) {
+                                eWash.setChecked(false);
+                            }
+                            break;
+                        case "watermotor":
+                            if (check[1].equals("true")) {
+                                eMotor.setChecked(true);
+                            } else if (check[1].equals("false")) {
+                                eMotor.setChecked(false);
+                            }
+                            break;
+                        case "outsidelight":
+                            if (check[1].equals("true")) {
+                                eOutLight.setChecked(true);
+                            } else if (check[1].equals("false")) {
+                                eOutLight.setChecked(false);
+                            }
+                            break;
                     }
-                    Log.d("init", "init: " + pass);
-                    Log.d("eco", "eco: " + a_eco.get(count));
-                    count++;
                 }
-                all++;
-                pass++;
-                refresh();
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
             }
         });
-    }
 
-    public void refresh() {
-        Log.d("INSIDE", "onDataChange: ");
-        int count_ = 0;
-        Log.d("size", "size: " + a_thumb.size() + "," + a_name.size() + "," + a_switch.size() + "," + a_eco.size());
-        if (all > 1) {
-            while (count_ < a_name.size()) {
-                Word appliance = new Word(a_thumb.get(count_), a_name.get(count_), a_switch.get(count_), a_eco.get(count_));
-                Log.d("Inside", "Inside: " + a_name.get(count_));
-                count_++;
-                appliances.add(appliance);
-            }
-            adapter = new WordAdapter(DashboardActivity.this, appliances);
-            applianceListView.setAdapter(adapter);
-        }
+
     }
 
     public void ecoMode(View view) {
         if (eco.isChecked()) {
+            eHeater.setChecked(true);
+            eIron.setChecked(true);
+            eOutLight.setChecked(true);
+            eBedLight.setChecked(true);
+            eMotor.setChecked(true);
+            eBedFan.setChecked(true);
+            eWash.setChecked(true);
+
             databaseReference= FirebaseDatabase.getInstance().getReference(passcode_pass).child("ECOMODE STATUS");
-            databaseReference.child("WATER HEATER").setValue("Water Heater_true");
-            databaseReference.child("IRON BOX").setValue("Iron Box_true");
-            databaseReference.child("OUTSIDE LIGHT").setValue("Outside Light_true");
-            databaseReference.child("BEDROOM LIGHT").setValue("Bedroom Light_true");
-            databaseReference.child("WATER MOTOR").setValue("Water Motor_true");
-            databaseReference.child("BEDROOM FAN").setValue("Bedroom Fan_true");
-            databaseReference.child("WASHING MACHINE").setValue("Washing Machine_true");
+            databaseReference.child("WATER HEATER").setValue("waterheater_true");
+            databaseReference.child("IRON BOX").setValue("ironbox_true");
+            databaseReference.child("OUTSIDE LIGHT").setValue("outsidelight_true");
+            databaseReference.child("BEDROOM LIGHT").setValue("bedroomlight_true");
+            databaseReference.child("WATER MOTOR").setValue("watermotor_true");
+            databaseReference.child("BEDROOM FAN").setValue("bedroomfan_true");
+            databaseReference.child("WASHING MACHINE").setValue("washingmachine_true");
         } else {
+            eHeater.setChecked(false);
+            eIron.setChecked(false);
+            eOutLight.setChecked(false);
+            eBedLight.setChecked(false);
+            eMotor.setChecked(false);
+            eBedFan.setChecked(false);
+            eWash.setChecked(false);
+
             databaseReference= FirebaseDatabase.getInstance().getReference(passcode_pass).child("ECOMODE STATUS");
-            databaseReference.child("WATER HEATER").setValue("Water Heater_false");
-            databaseReference.child("IRON BOX").setValue("Iron Box_false");
-            databaseReference.child("OUTSIDE LIGHT").setValue("Outside Light_false");
-            databaseReference.child("BEDROOM LIGHT").setValue("Bedroom Light_false");
-            databaseReference.child("WATER MOTOR").setValue("Water Motor_false");
-            databaseReference.child("BEDROOM FAN").setValue("Bedroom Fan_false");
-            databaseReference.child("WASHING MACHINE").setValue("Washing Machine_false");
+            databaseReference.child("WATER HEATER").setValue("waterheater_false");
+            databaseReference.child("IRON BOX").setValue("ironbox_false");
+            databaseReference.child("OUTSIDE LIGHT").setValue("outsidelight_false");
+            databaseReference.child("BEDROOM LIGHT").setValue("bedroomlight_false");
+            databaseReference.child("WATER MOTOR").setValue("watermotor_false");
+            databaseReference.child("BEDROOM FAN").setValue("bedroomfan_false");
+            databaseReference.child("WASHING MACHINE").setValue("washingmachine_false");
         }
-        adapter.notifyDataSetChanged();
+    }
+
+    public void command(View view) {
+        if (view.getId() == R.id.heater) {
+            if (heater.isChecked()) {
+                command = "turn on water heater";
+            } else {
+                command = "turn off water heater";
+            }
+        } else if (view.getId() == R.id.eheater) {
+            if (eHeater.isChecked()) {
+                command = "turn on eco water heater";
+            } else {
+                command = "turn off eco water heater";
+            }
+        } else if (view.getId() == R.id.iron) {
+            if (iron.isChecked()) {
+                command = "turn on iron box";
+            } else {
+                command = "turn off iron box";
+            }
+        } else if (view.getId() == R.id.eiron) {
+            if (eIron.isChecked()) {
+                command = "turn on eco iron box";
+            } else {
+                command = "turn off eco iron box";
+            }
+        } else if (view.getId() == R.id.outlight) {
+            if (outLight.isChecked()) {
+                command = "turn on outside light";
+            } else {
+                command = "turn off outside light";
+            }
+        } else if (view.getId() == R.id.eoutlight) {
+            if (eOutLight.isChecked()) {
+                command = "turn on eco outside light";
+            } else {
+                command = "turn off eco outside light";
+            }
+        } else if (view.getId() == R.id.bedlight) {
+            if (bedLight.isChecked()) {
+                command = "turn on bedroom light";
+            } else {
+                command = "turn off bedroom light";
+            }
+        } else if (view.getId() == R.id.ebedlight) {
+            if (eBedLight.isChecked()) {
+                command = "turn on eco bedroom light";
+            } else {
+                command = "turn off eco bedroom light";
+            }
+        } else if (view.getId() == R.id.motor) {
+            if (motor.isChecked()) {
+                command = "turn on water motor";
+            } else {
+                command = "turn off water motor";
+            }
+        } else if (view.getId() == R.id.emotor) {
+            if (eMotor.isChecked()) {
+                command = "turn on eco water motor";
+            } else {
+                command = "turn off eco water motor";
+            }
+        } else if (view.getId() == R.id.bedfan) {
+            if (bedFan.isChecked()) {
+                command = "turn on bedroom fan";
+            } else {
+                command = "turn off bedroom fan";
+            }
+        } else if (view.getId() == R.id.ebedfan) {
+            if (eBedFan.isChecked()) {
+                command = "turn on eco bedroom fan";
+            } else {
+                command = "turn off eco bedroom fan";
+            }
+        } else if (view.getId() == R.id.wash) {
+            if (wash.isChecked()) {
+                command = "turn on washing machine";
+            } else {
+                command = "turn off washing machine";
+            }
+        } else if (view.getId() == R.id.ewash) {
+            if (eWash.isChecked()) {
+                command = "turn on eco washing machine";
+            } else {
+                command = "turn off eco washing machine";
+            }
+        } else if (view.getId() == R.id.eco) {
+            if (eco.isChecked()) {
+                command = "eco mode on";
+            } else {
+                command = "eco mode off";
+            }
+        }
+        makeToast(command);
     }
 
     public void talk(View view) {
@@ -317,7 +570,7 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
                     ArrayList<String> result = data
                             .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                     command = result.get(0).toLowerCase();
-                    makeToast(command);
+                    already(command);
                 }
                 break;
             }
@@ -325,84 +578,502 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
         }
     }
 
-    private void makeToast(String cmd) {
-        int got = 0;
-        for (int i = 0; i < name_voice.size(); i++) {
-            if (got == 1)
-                break;
-            String name_voice_ = name_voice.get(i);
-            if (cmd.contains("eco")) {
-                if (cmd.contains(name_voice_)) {
-                    if (cmd.contains("on")) {
-                        if (a_eco.get(i)) {
-                            got = 1;
-                            reply = "eco mode of " + name_voice_ + " already turned on";
-                        }
-                        else {
-                            got = 1;
-                            reply = "eco mode of " + name_voice_ + " turned on";
-                            databaseReference = FirebaseDatabase.getInstance().getReference(passcode_pass).child("ECOMODE STATUS");
-                            databaseReference.child(name_voice_.toUpperCase()).setValue(a_name.get(i) + "_true");
-                        }
-                    } else if (cmd.contains("off")) {
-                        if (!a_eco.get(i)) {
-                            got = 1;
-                            reply = "eco mode of " + name_voice_ + " already turned off";
-                        }
-                        else {
-                            got = 1;
-                            reply = "eco mode of " + name_voice_ + " turned off";
-                            databaseReference = FirebaseDatabase.getInstance().getReference(passcode_pass).child("ECOMODE STATUS");
-                            databaseReference.child(name_voice_.toUpperCase()).setValue(a_name.get(i) + "_false");
-                        }
-                    } else {
-                        reply = "Pardon! Speak Again.";
-                    }
-                } else if (cmd.contains("on")) {
-                    got = 1;
-                    eco.setChecked(true);
-                    ecoMode(eco);
-                    reply = "eco mode turned on";
-                } else if (cmd.contains("off")) {
-                    got = 1;
-                    eco.setChecked(false);
-                    ecoMode(eco);
-                    reply = "eco mode turned off";
-                } else {
-                    reply = "Pardon! Speak Again.";
-                }
-            } else if (cmd.contains(name_voice_)) {
+    private void already(String cmd) {
+        if (cmd.contains("eco")) {
+            if (cmd.contains("water heater")) {
                 if (cmd.contains("on")) {
-                    if (a_switch.get(i)) {
-                        got = 1;
-                        reply = name_voice_ + " already turned on";
-                    }
-                    else {
-                        got = 1;
-                        reply = name_voice_ + " turned on";
-                        databaseReference = FirebaseDatabase.getInstance().getReference(passcode_pass).child("DEVICE STATUS");
-                        databaseReference.child(name_voice_.toUpperCase()).setValue(a_name.get(i) + "_true");
-                    }
+                    if (eHeater.isChecked())
+                        reply = "eco mode of water heater already turned on";
+                    else
+                        makeToast(cmd);
                 } else if (cmd.contains("off")) {
-                    if (!a_switch.get(i)) {
-                        got = 1;
-                        reply = name_voice_ + " already turned off";
-                    }
-                    else {
-                        got = 1;
-                        reply = name_voice_ + " turned off";
-                        databaseReference = FirebaseDatabase.getInstance().getReference(passcode_pass).child("DEVICE STATUS");
-                        databaseReference.child(name_voice_.toUpperCase()).setValue(a_name.get(i) + "_false");
-                    }
+                    if (!eHeater.isChecked())
+                        reply = "eco mode of water heater already turned off";
+                    else
+                        makeToast(cmd);
                 } else {
-                    Log.d("pardon", "pardon: in");
+                    makeToast(cmd);
+                }
+            } else if (cmd.contains("iron box")) {
+                if (cmd.contains("turn on")) {
+                    if (eIron.isChecked())
+                        reply = "eco mode of iron box already turned on";
+                    else
+                        makeToast(cmd);
+                } else if (cmd.contains("off")) {
+                    if (!eIron.isChecked())
+                        reply = "eco mode of iron box already turned off";
+                    else
+                        makeToast(cmd);
+                } else {
+                    makeToast(cmd);
+                }
+            } else if (cmd.contains("outside light")) {
+                if (cmd.contains("on")) {
+                    if (eOutLight.isChecked())
+                        reply = "eco mode of outside light already turned on";
+                    else
+                        makeToast(cmd);
+                } else if (cmd.contains("off")) {
+                    if (!eOutLight.isChecked())
+                        reply = "eco mode of outside light already turned off";
+                    else
+                        makeToast(cmd);
+                } else {
+                    makeToast(cmd);
+                }
+            } else if (cmd.contains("bedroom light")) {
+                if (cmd.contains("on")) {
+                    if (eBedLight.isChecked())
+                        reply = "eco mode of bedroom light already turned on";
+                    else
+                        makeToast(cmd);
+                } else if (cmd.contains("off")) {
+                    if (!eBedLight.isChecked())
+                        reply = "eco mode of bedroom light already turned off";
+                    else
+                        makeToast(cmd);
+                } else {
+                    makeToast(cmd);
+                }
+            } else if (cmd.contains("water motor")) {
+                if (cmd.contains("on")) {
+                    if (eMotor.isChecked())
+                    reply = "eco mode of water motor already turned on";
+                    else
+                        makeToast(cmd);
+                } else if (cmd.contains("off")) {
+                    if (!eMotor.isChecked())
+                    reply = "eco mode of water motor already turned off";
+                    else
+                        makeToast(cmd);
+                } else {
+                    makeToast(cmd);
+                }
+            } else if (cmd.contains("bedroom fan")) {
+                if (cmd.contains("on")) {
+                    if (eBedFan.isChecked())
+                        reply = "eco mode of bedroom fan already turned on";
+                    else
+                        makeToast(cmd);
+                } else if (cmd.contains("off")) {
+                    if (!eBedFan.isChecked())
+                        reply = "eco mode of bedroom fan already turned off";
+                    else
+                        makeToast(cmd);
+                } else {
+                    makeToast(cmd);
+                }
+            } else if (cmd.contains("washing machine")) {
+                if (cmd.contains("on")) {
+                    if (eWash.isChecked())
+                        reply = "eco mode of washing machine already turned on";
+                    else
+                        makeToast(cmd);
+                } else if (cmd.contains("off")) {
+                    if (!eWash.isChecked())
+                        reply = "eco mode of washing machine already turned off";
+                    else
+                        makeToast(cmd);
+                } else {
+                    makeToast(cmd);
+                }
+            } else if (cmd.contains("on")) {
+                if (eco.isChecked())
+                    reply = "eco mode already turned on";
+                else
+                    makeToast(cmd);
+            } else if (cmd.contains("off")) {
+                if (!eco.isChecked())
+                    reply = "eco mode already turned off";
+                else
+                    makeToast(cmd);
+            } else {
+                makeToast(cmd);
+            }
+        } else if (cmd.contains("water heater")) {
+            if (cmd.contains("on")) {
+                if (heater.isChecked())
+                    reply = "water heater already turned on";
+                else
+                    makeToast(cmd);
+            } else if (cmd.contains("off")) {
+                if (!heater.isChecked())
+                    reply = "water heater already turned off";
+                else
+                    makeToast(cmd);
+            } else {
+                makeToast(cmd);
+            }
+        } else if (cmd.contains("iron box")) {
+            if (cmd.contains("turn on")) {
+                if (iron.isChecked())
+                    reply = "iron box already turned on";
+                else
+                    makeToast(cmd);
+            } else if (cmd.contains("off")) {
+                if (!iron.isChecked())
+                    reply = "iron box already turned off";
+                else
+                    makeToast(cmd);
+            } else {
+                makeToast(cmd);
+            }
+        } else if (cmd.contains("outside light")) {
+            if (cmd.contains("on")) {
+                if (outLight.isChecked())
+                    reply = "outside light already turned on";
+                else
+                    makeToast(cmd);
+            } else if (cmd.contains("off")) {
+                if (!outLight.isChecked())
+                    reply = "outside light already turned off";
+                else
+                    makeToast(cmd);
+            } else {
+                makeToast(cmd);
+            }
+        } else if (cmd.contains("bedroom light")) {
+            if (cmd.contains("on")) {
+                if (bedLight.isChecked())
+                    reply = "bedroom light already turned on";
+                else
+                    makeToast(cmd);
+            } else if (cmd.contains("off")) {
+                if (!bedLight.isChecked())
+                    reply = "bedroom light already turned off";
+                else
+                    makeToast(cmd);
+            } else {
+                makeToast(cmd);
+            }
+        } else if (cmd.contains("water motor")) {
+            if (cmd.contains("on")) {
+                if (motor.isChecked())
+                    reply = "water motor already turned on";
+                else
+                    makeToast(cmd);
+            } else if (cmd.contains("off")) {
+                if (!motor.isChecked())
+                    reply = "water motor already turned off";
+                else
+                    makeToast(cmd);
+            } else {
+                makeToast(cmd);
+            }
+        } else if (cmd.contains("bedroom fan")) {
+            if (cmd.contains("on")) {
+                if (bedFan.isChecked())
+                    reply = "bedroom fan already turned on";
+                else
+                    makeToast(cmd);
+            } else if (cmd.contains("off")) {
+                if (!bedFan.isChecked())
+                    reply = "bedroom fan already turned off";
+                else
+                    makeToast(cmd);
+            } else {
+                makeToast(cmd);
+            }
+        } else if (cmd.contains("washing machine")) {
+            if (cmd.contains("on")) {
+                if (wash.isChecked())
+                    reply = "washing machine already turned on";
+                else
+                    makeToast(cmd);
+            } else if (cmd.contains("off")) {
+                if (!wash.isChecked())
+                    reply = "washing machine already turned off";
+                else
+                    makeToast(cmd);
+            } else {
+                makeToast(cmd);
+            }
+        } else {
+            makeToast(cmd);
+        }
+
+        Toast.makeText(getApplicationContext(), reply, Toast.LENGTH_SHORT).show();
+        tts.speak(reply, TextToSpeech.QUEUE_FLUSH, null);
+    }
+
+    private void makeToast(String cmd) {
+        if (cmd.contains("eco")) {
+             if (cmd.contains("water heater")) {
+                if (cmd.contains("on")) {
+                    eHeater.setChecked(true);
+                    reply = "eco mode of water heater turned on";
+
+                    databaseReference= FirebaseDatabase.getInstance().getReference(passcode_pass).child("ECOMODE STATUS");
+                    databaseReference.child("WATER HEATER").setValue("waterheater_true");
+
+                } else if (cmd.contains("off")) {
+                    eHeater.setChecked(false);
+                    reply = "eco mode of water heater turned off";
+
+                    databaseReference= FirebaseDatabase.getInstance().getReference(passcode_pass).child("ECOMODE STATUS");
+                    databaseReference.child("WATER HEATER").setValue("waterheater_false");
+
+                } else {
                     reply = "Pardon! Speak Again.";
                 }
+            } else if (cmd.contains("iron box")) {
+                if (cmd.contains("turn on")) {
+                    eIron.setChecked(true);
+                    reply = "eco mode of iron box turned on";
+
+                    databaseReference= FirebaseDatabase.getInstance().getReference(passcode_pass).child("ECOMODE STATUS");
+                    databaseReference.child("IRON BOX").setValue("ironbox_true");
+
+                } else if (cmd.contains("off")) {
+                    eIron.setChecked(false);
+                    reply = "eco mode of iron box turned off";
+
+                    databaseReference= FirebaseDatabase.getInstance().getReference(passcode_pass).child("ECOMODE STATUS");
+                    databaseReference.child("IRON BOX").setValue("ironbox_false");
+
+                } else {
+                    reply = "Pardon! Speak Again.";
+                }
+            } else if (cmd.contains("outside light")) {
+                if (cmd.contains("on")) {
+                    eOutLight.setChecked(true);
+                    reply = "eco mode of outside light turned on";
+
+                    databaseReference= FirebaseDatabase.getInstance().getReference(passcode_pass).child("ECOMODE STATUS");
+                    databaseReference.child("OUTSIDE LIGHT").setValue("outsidelight_true");
+
+                } else if (cmd.contains("off")) {
+                    eOutLight.setChecked(false);
+                    reply = "eco mode of outside light turned off";
+
+                    databaseReference= FirebaseDatabase.getInstance().getReference(passcode_pass).child("ECOMODE STATUS");
+                    databaseReference.child("OUTSIDE LIGHT").setValue("outsidelight_false");
+
+                } else {
+                    reply = "Pardon! Speak Again.";
+                }
+            } else if (cmd.contains("bedroom light")) {
+                if (cmd.contains("on")) {
+                    eBedLight.setChecked(true);
+                    reply = "eco mode of bedroom light turned on";
+
+                    databaseReference= FirebaseDatabase.getInstance().getReference(passcode_pass).child("ECOMODE STATUS");
+                    databaseReference.child("BEDROOM LIGHT").setValue("bedroomlight_true");
+
+                } else if (cmd.contains("off")) {
+                    eBedLight.setChecked(false);
+                    reply = "eco mode of bedroom light turned off";
+
+                    databaseReference= FirebaseDatabase.getInstance().getReference(passcode_pass).child("ECOMODE STATUS");
+                    databaseReference.child("BEDROOM LIGHT").setValue("bedroomlight_false");
+
+                } else {
+                    reply = "Pardon! Speak Again.";
+                }
+            } else if (cmd.contains("water motor")) {
+                if (cmd.contains("on")) {
+                    eMotor.setChecked(true);
+                    reply = "eco mode of water motor turned on";
+
+                    databaseReference= FirebaseDatabase.getInstance().getReference(passcode_pass).child("ECOMODE STATUS");
+                    databaseReference.child("WATER MOTOR").setValue("watermotor_true");
+
+                } else if (cmd.contains("off")) {
+                    eMotor.setChecked(false);
+                    reply = "eco mode of water motor turned off";
+
+                    databaseReference= FirebaseDatabase.getInstance().getReference(passcode_pass).child("ECOMODE STATUS");
+                    databaseReference.child("WATER MOTOR").setValue("watermotor_false");
+
+                } else {
+                    reply = "Pardon! Speak Again.";
+                }
+            } else if (cmd.contains("bedroom fan")) {
+                if (cmd.contains("on")) {
+                    eBedFan.setChecked(true);
+                    reply = "eco mode of bedroom fan turned on";
+
+                    databaseReference= FirebaseDatabase.getInstance().getReference(passcode_pass).child("ECOMODE STATUS");
+                    databaseReference.child("BEDROOM FAN").setValue("bedroomfan_true");
+
+                } else if (cmd.contains("off")) {
+                    eBedFan.setChecked(false);
+                    reply = "eco mode of bedroom fan turned off";
+
+                    databaseReference= FirebaseDatabase.getInstance().getReference(passcode_pass).child("ECOMODE STATUS");
+                    databaseReference.child("BEDROOM FAN").setValue("bedroomfan_false");
+
+                } else {
+                    reply = "Pardon! Speak Again.";
+                }
+            } else if (cmd.contains("washing machine")) {
+                if (cmd.contains("on")) {
+                    eWash.setChecked(true);
+                    reply = "eco mode of washing machine turned on";
+
+                    databaseReference= FirebaseDatabase.getInstance().getReference(passcode_pass).child("ECOMODE STATUS");
+                    databaseReference.child("WASHING MACHINE").setValue("washingmachine_true");
+
+                } else if (cmd.contains("off")) {
+                    eWash.setChecked(false);
+                    reply = "eco mode of washing machine turned off";
+
+                    databaseReference= FirebaseDatabase.getInstance().getReference(passcode_pass).child("ECOMODE STATUS");
+                    databaseReference.child("WASHING MACHINE").setValue("washingmachine_false");
+
+                } else {
+                    reply = "Pardon! Speak Again.";
+                }
+            } else if (cmd.contains("on")) {
+                eco.setChecked(true);
+                ecoMode(eco);
+                reply = "eco mode turned on";
+
+//                databaseReference= FirebaseDatabase.getInstance().getReference("ECOMODE STATUS");
+
+            } else if (cmd.contains("off")) {
+                eco.setChecked(false);
+                ecoMode(eco);
+                reply = "eco mode turned off";
+
+//                databaseReference= FirebaseDatabase.getInstance().getReference("ECOMODE STATUS");
+
             } else {
-                Log.d("pardon", "pardon: out");
                 reply = "Pardon! Speak Again.";
             }
+        } else if (cmd.contains("water heater")) {
+            if (cmd.contains("on")) {
+                heater.setChecked(true);
+                reply = "water heater turned on";
+
+
+                databaseReference= FirebaseDatabase.getInstance().getReference(passcode_pass).child("DEVICE STATUS");
+
+                databaseReference.child("WATER HEATER").setValue("waterheater_true");
+
+            } else if (cmd.contains("off")) {
+                heater.setChecked(false);
+                reply = "water heater turned off";
+
+                databaseReference= FirebaseDatabase.getInstance().getReference(passcode_pass).child("DEVICE STATUS");
+                databaseReference.child("WATER HEATER").setValue("waterheater_false");
+
+            } else {
+                reply = "Pardon! Speak Again.";
+            }
+        } else if (cmd.contains("iron box")) {
+            if (cmd.contains("turn on")) {
+                iron.setChecked(true);
+                reply = "iron box turned on";
+
+                databaseReference= FirebaseDatabase.getInstance().getReference(passcode_pass).child("DEVICE STATUS");
+                databaseReference.child("IRON BOX").setValue("ironbox_true");
+
+            } else if (cmd.contains("off")) {
+                iron.setChecked(false);
+                reply = "iron box turned off";
+
+                databaseReference= FirebaseDatabase.getInstance().getReference(passcode_pass).child("DEVICE STATUS");
+                databaseReference.child("IRON BOX").setValue("ironbox_false");
+
+            } else {
+                reply = "Pardon! Speak Again.";
+            }
+        } else if (cmd.contains("outside light")) {
+            if (cmd.contains("on")) {
+                outLight.setChecked(true);
+                reply = "outside light turned on";
+
+                databaseReference= FirebaseDatabase.getInstance().getReference(passcode_pass).child("DEVICE STATUS");
+                databaseReference.child("OUTSIDE LIGHT").setValue("outsidelight_true");
+
+            } else if (cmd.contains("off")) {
+                outLight.setChecked(false);
+                reply = "outside light turned off";
+
+                databaseReference= FirebaseDatabase.getInstance().getReference(passcode_pass).child("DEVICE STATUS");
+                databaseReference.child("OUTSIDE LIGHT").setValue("outsidelight_false");
+
+            } else {
+                reply = "Pardon! Speak Again.";
+            }
+        } else if (cmd.contains("bedroom light")) {
+            if (cmd.contains("on")) {
+                bedLight.setChecked(true);
+                reply = "bedroom light turned on";
+
+                databaseReference= FirebaseDatabase.getInstance().getReference(passcode_pass).child("DEVICE STATUS");
+                databaseReference.child("BEDROOM LIGHT").setValue("bedroomlight_true");
+
+            } else if (cmd.contains("off")) {
+                bedLight.setChecked(false);
+                reply = "bedroom light turned off";
+
+                databaseReference= FirebaseDatabase.getInstance().getReference(passcode_pass).child("DEVICE STATUS");
+                databaseReference.child("BEDROOM LIGHT").setValue("bedroomlight_false");
+
+            } else {
+                reply = "Pardon! Speak Again.";
+            }
+        } else if (cmd.contains("water motor")) {
+            if (cmd.contains("on")) {
+                motor.setChecked(true);
+                reply = "water motor turned on";
+
+                databaseReference= FirebaseDatabase.getInstance().getReference(passcode_pass).child("DEVICE STATUS");
+                databaseReference.child("WATER MOTOR").setValue("watermotor_true");
+
+            } else if (cmd.contains("off")) {
+                motor.setChecked(false);
+                reply = "water motor turned off";
+
+                databaseReference= FirebaseDatabase.getInstance().getReference(passcode_pass).child("DEVICE STATUS");
+                databaseReference.child("WATER MOTOR").setValue("watermotor_false");
+
+            } else {
+                reply = "Pardon! Speak Again.";
+            }
+        } else if (cmd.contains("bedroom fan")) {
+            if (cmd.contains("on")) {
+                bedFan.setChecked(true);
+                reply = "bedroom fan turned on";
+
+                databaseReference= FirebaseDatabase.getInstance().getReference(passcode_pass).child("DEVICE STATUS");
+                databaseReference.child("BEDROOM FAN").setValue("bedroomfan_true");
+
+            } else if (cmd.contains("off")) {
+                bedFan.setChecked(false);
+                reply = "bedroom fan turned off";
+
+                databaseReference= FirebaseDatabase.getInstance().getReference(passcode_pass).child("DEVICE STATUS");
+                databaseReference.child("BEDROOM FAN").setValue("bedroomfan_false");
+
+            } else {
+                reply = "Pardon! Speak Again.";
+            }
+        } else if (cmd.contains("washing machine")) {
+            if (cmd.contains("on")) {
+                wash.setChecked(true);
+                reply = "washing machine turned on";
+
+                databaseReference= FirebaseDatabase.getInstance().getReference(passcode_pass).child("DEVICE STATUS");
+                databaseReference.child("WASHING MACHINE").setValue("washingmachine_true");
+
+            } else if (cmd.contains("off")) {
+                wash.setChecked(false);
+                reply = "washing machine turned off";
+
+                databaseReference= FirebaseDatabase.getInstance().getReference(passcode_pass).child("DEVICE STATUS");
+                databaseReference.child("WASHING MACHINE").setValue("washingmachine_false");
+
+            } else {
+                reply = "Pardon! Speak Again.";
+            }
+        } else {
+            reply = "Pardon! Speak Again.";
         }
+
         Toast.makeText(getApplicationContext(), reply, Toast.LENGTH_SHORT).show();
         tts.speak(reply, TextToSpeech.QUEUE_FLUSH, null);
     }
@@ -419,6 +1090,7 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
+
         switch (id) {
             case R.id.nav_eco:
                 break;
@@ -427,20 +1099,44 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
             case R.id.nav_settings:
                 break;
             case R.id.nav_logout:
-                db = openOrCreateDatabase("REGISTRATION_STATUS", Context.MODE_PRIVATE, null);
-                c = db.rawQuery("SELECT * FROM reg WHERE sno='" + sno + "'", null);
-                if (c.moveToFirst()) {
-                    db.execSQL("DELETE FROM reg WHERE sno='" + sno + "'");
-                    showMessage("Success", "Successfully Logged Out");
-                    Intent nxt=new Intent(DashboardActivity.this,RegisterActivity.class);
-                    startActivity(nxt);
-                }
                 break;
         }
+
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
+
+    public void onClick(View v) {
+
+//        databaseReference= FirebaseDatabase.getInstance().getReference(passcode_pass).child("LOGIN STATUS");
+//        databaseReference.child("LOGIN STATUS").setValue("false");
+
+
+//        databaseReference=FirebaseDatabase.getInstance().getReference().child(passcode_pass);
+//        databaseReference.removeValue();
+//
+//
+//        databaseReference=FirebaseDatabase.getInstance().getReference().child("USER LOGIN DETAILS");
+//        databaseReference.child(passcode_pass).removeValue();
+
+
+
+
+        db = openOrCreateDatabase("REGISTRATION_STATUS", Context.MODE_PRIVATE, null);
+
+         c = db.rawQuery("SELECT * FROM reg WHERE sno='" + sno + "'", null);
+        if (c.moveToFirst()) {
+            db.execSQL("DELETE FROM reg WHERE sno='" + sno + "'");
+            showMessage("Success", "Successfully Logged Out");
+
+
+            Intent nxt=new Intent(DashboardActivity.this,RegisterActivity.class);
+            startActivity(nxt);
+        }
+
+
+    }
     public void showMessage(String title, String message) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setCancelable(true);
@@ -448,4 +1144,5 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
         builder.setMessage(message);
         builder.show();
     }
+
 }
