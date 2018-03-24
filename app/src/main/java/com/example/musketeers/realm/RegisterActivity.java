@@ -23,6 +23,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.location.GeofencingClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -46,6 +48,7 @@ public class RegisterActivity extends AppCompatActivity {
     Dialog myDialog;
     ArrayList<String> login_details=new ArrayList<>();
     String passcode_pass;
+    double latitude, longitude;
 
     GPSTracker gps;
     private final int REQ_CODE_SPEECH_INPUT = 100;
@@ -54,7 +57,6 @@ public class RegisterActivity extends AppCompatActivity {
     private static final int REQUEST_CODE_PERMISSION = 2;
     String mPermission = Manifest.permission.ACCESS_FINE_LOCATION;
     public SQLiteDatabase db;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,8 +111,8 @@ public class RegisterActivity extends AppCompatActivity {
     public void location(View view) {
         gps = new GPSTracker(RegisterActivity.this);
         if (gps.canGetLocation()) {
-            double latitude = gps.getLatitude();
-            double longitude = gps.getLongitude();
+            latitude = gps.getLatitude();
+            longitude = gps.getLongitude();
             location = latitude + "," + longitude;
             loc.setImageResource(R.drawable.tick1);
         } else {
@@ -124,29 +126,30 @@ public class RegisterActivity extends AppCompatActivity {
         econsumer = et4.getText().toString();
         if ((!name.isEmpty()) && (!aadhar.isEmpty()) && (aadhar.length() > 11) && (!econsumer.isEmpty()) && (econsumer.length() > 9) && (location != null)) {
             passcode_pass=et2.getText().toString().substring(0,5)+et4.getText().toString().substring(5,10);
-            String sno="1";
             db = openOrCreateDatabase("REGISTRATION_STATUS", Context.MODE_PRIVATE, null);
-            db.execSQL("INSERT INTO reg VALUES('" + sno + "','" +passcode_pass + "');");
+            db.execSQL("INSERT INTO reg VALUES('1','" + passcode_pass + "');");
 
             Intent i = new Intent(this, PairActivity.class);
             i.putExtra(PairActivity.aadhar_name, aadhar);
             i.putExtra(PairActivity.econsumer_name, econsumer);
 
-            String KEY = et2.getText().toString().substring(0,5)+et4.getText().toString().substring(5,10);
+            String KEY = aadhar.substring(0,5) + econsumer.substring(5,10);
             i.putExtra("KEY",KEY);
 
             startActivity(i);
 
-            databaseReference = FirebaseDatabase.getInstance().getReference(et2.getText().toString().substring(0,5)+et4.getText().toString().substring(5,10)).child("USER DETAILS");
+            databaseReference = FirebaseDatabase.getInstance().getReference(KEY).child("USER DETAILS");
             databaseReference.child("NAME").setValue(et1.getText().toString());
             databaseReference.child("ADHAAR NUMBER").setValue(et2.getText().toString());
             databaseReference.child("CONSUMER NUMBER").setValue(et4.getText().toString());
+            databaseReference.child("LOC LATITUDE").setValue("" + latitude);
+            databaseReference.child("LOC LONGITUDE").setValue("" + longitude);
             databaseReference.child("PAIR STATUS").setValue("false");
 
             databaseReference = FirebaseDatabase.getInstance().getReference("USER LOGIN DETAILS");
-            databaseReference.child(et2.getText().toString().substring(0,5)+et4.getText().toString().substring(5,10)).setValue(et2.getText().toString().substring(0,5)+et4.getText().toString().substring(5,10));
+            databaseReference.child(KEY).setValue(KEY);
 
-            databaseReference = FirebaseDatabase.getInstance().getReference(et2.getText().toString().substring(0,5)+et4.getText().toString().substring(5,10)).child("ECOMODE STATUS");
+            databaseReference = FirebaseDatabase.getInstance().getReference(KEY).child("ECOMODE STATUS");
             databaseReference.child("WATER HEATER").setValue("Water Heater_false");
             databaseReference.child("IRON BOX").setValue("Iron Box_false");
             databaseReference.child("OUTSIDE LIGHT").setValue("Outside Light_false");
@@ -155,7 +158,7 @@ public class RegisterActivity extends AppCompatActivity {
             databaseReference.child("BEDROOM FAN").setValue("Bedroom Fan_false");
             databaseReference.child("WASHING MACHINE").setValue("Washing Machine_false");
 
-            databaseReference = FirebaseDatabase.getInstance().getReference(et2.getText().toString().substring(0,5)+et4.getText().toString().substring(5,10)).child("DEVICE STATUS");
+            databaseReference = FirebaseDatabase.getInstance().getReference(KEY).child("DEVICE STATUS");
             databaseReference.child("WATER HEATER").setValue("Water Heater_false");
             databaseReference.child("IRON BOX").setValue("Iron Box_false");
             databaseReference.child("OUTSIDE LIGHT").setValue("Outside Light_false");

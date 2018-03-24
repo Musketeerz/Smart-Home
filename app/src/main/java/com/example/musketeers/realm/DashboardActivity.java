@@ -1,15 +1,23 @@
 package com.example.musketeers.realm;
 
+import android.*;
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Parcelable;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -20,9 +28,16 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.google.android.gms.location.Geofence;
+import com.google.android.gms.location.GeofencingClient;
+import com.google.android.gms.location.GeofencingRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -32,7 +47,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Locale;
 
-public class DashboardActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class DashboardActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnCompleteListener<Void> {
 
     private ToggleButton eco;
     DrawerLayout drawer;
@@ -50,6 +65,7 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
 
     WordAdapter adapter;
     ListView applianceListView;
+    TextView name;
 
     private final int REQ_CODE_SPEECH_INPUT = 100;
     private String command, reply;
@@ -58,8 +74,33 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
     public int pass = 0, all = 0;
     public SQLiteDatabase db;
     Cursor c;
-    String sno = "1";
+    String sno = "1", pro_name;
     Dialog myDialog;
+
+    GPSTracker gps;
+    double latitude, longitude;
+    private static final String PACKAGE_NAME = "com.google.android.gms.location.Geofence";
+    static final String GEOFENCES_ADDED_KEY = PACKAGE_NAME + ".GEOFENCES_ADDED_KEY";
+    private static final long GEOFENCE_EXPIRATION_IN_HOURS = 12;
+    static final long GEOFENCE_EXPIRATION_IN_MILLISECONDS = GEOFENCE_EXPIRATION_IN_HOURS * 60 * 60 * 1000;
+    static final float GEOFENCE_RADIUS_IN_METERS = 100; // 1 mile, 1.6 km, 1609 m
+    private static final String TAG = DashboardActivity.class.getSimpleName();
+    private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
+
+    @Override
+    public void onComplete(@NonNull Task<Void> task) {
+
+    }
+
+    private enum PendingGeofenceTask {
+        ADD, NONE
+    }
+
+    private GeofencingClient mGeofencingClient;
+    private ArrayList<Geofence> mGeofenceList;
+    private PendingIntent mGeofencePendingIntent;
+    private PendingGeofenceTask mPendingGeofenceTask = PendingGeofenceTask.NONE;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +125,7 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
                 String a = "1";
                 c = db.rawQuery("SELECT * FROM reg WHERE sno='" + a + "'", null);
                 if (c.moveToFirst()) {
-                    passcode_pass=c.getString(1);
+                    passcode_pass = c.getString(1);
                     Log.d("pass", "pass: " + passcode_pass);
                 }
             }
@@ -92,6 +133,13 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
         catch (Exception e) {
             Toast.makeText(getApplicationContext(), "Database Failure", Toast.LENGTH_SHORT).show();
         }
+
+        mGeofenceList = new ArrayList<>();
+        mGeofencePendingIntent = null;
+        populateGeofenceList();
+        mGeofencingClient = LocationServices.getGeofencingClient(this);
+
+        name = findViewById(R.id.name);
 
         eco = findViewById(R.id.eco);
         applianceListView = findViewById(R.id.list);
@@ -115,7 +163,7 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
             }
         });
 
-        databaseReference= FirebaseDatabase.getInstance().getReference(passcode_pass).child("USER DETAILS");
+        databaseReference = FirebaseDatabase.getInstance().getReference(passcode_pass).child("USER DETAILS");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -123,7 +171,7 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
                     String usrs = child.getValue(String.class);
                     name1.add(usrs);
                 }
-                if(name1.get(3).equals("false")) {
+                if(name1.get(5).equals("false")) {
                     db = openOrCreateDatabase("REGISTRATION_STATUS", Context.MODE_PRIVATE, null);
                     c = db.rawQuery("SELECT * FROM reg WHERE sno='" + sno + "'", null);
                     if (c.moveToFirst()) {
@@ -133,6 +181,8 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
                         startActivity(nxt);
                     }
                 } else {
+                    latitude = Double.parseDouble(name1.get(2));
+                    longitude = Double.parseDouble(name1.get(3));
                     name1.clear();
                 }
             }
@@ -259,8 +309,111 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
                 appliances.add(appliance);
             }
             adapter = new WordAdapter(DashboardActivity.this, appliances);
+            Parcelable state = applianceListView.onSaveInstanceState();
             applianceListView.setAdapter(adapter);
+            applianceListView.onRestoreInstanceState(state);
         }
+    }
+
+    private void populateGeofenceList() {
+        mGeofenceList.add(new Geofence.Builder()
+                .setRequestId("Home")
+                .setCircularRegion(
+                        latitude,
+                        longitude,
+                        GEOFENCE_RADIUS_IN_METERS
+                )
+                .setExpirationDuration(GEOFENCE_EXPIRATION_IN_MILLISECONDS)
+                .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER |
+                        Geofence.GEOFENCE_TRANSITION_EXIT)
+                .build());
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (!checkPermissions()) {
+            requestPermissions();
+        } else {
+            performPendingGeofenceTask();
+        }
+    }
+
+    private boolean checkPermissions() {
+        int permissionState = ActivityCompat.checkSelfPermission(this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION);
+        return permissionState == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private void requestPermissions() {
+        boolean shouldProvideRationale =
+                ActivityCompat.shouldShowRequestPermissionRationale(this,
+                        android.Manifest.permission.ACCESS_FINE_LOCATION);
+        if (shouldProvideRationale) {
+            Log.i(TAG, "Displaying permission rationale to provide additional context.");
+            showSnackbar(R.string.permission_rationale, android.R.string.ok,
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            ActivityCompat.requestPermissions(DashboardActivity.this,
+                                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                                    REQUEST_PERMISSIONS_REQUEST_CODE);
+                        }
+                    });
+        } else {
+            Log.i(TAG, "Requesting permission");
+            ActivityCompat.requestPermissions(DashboardActivity.this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    REQUEST_PERMISSIONS_REQUEST_CODE);
+        }
+    }
+
+    private void performPendingGeofenceTask() {
+        if (mPendingGeofenceTask == PendingGeofenceTask.ADD) {
+            addGeofences();
+        }
+    }
+
+    @SuppressWarnings("MissingPermission")
+    private void addGeofences() {
+        if (!checkPermissions()) {
+            showSnackbar(getString(R.string.insufficient_permissions));
+            return;
+        }
+        mGeofencingClient.addGeofences(getGeofencingRequest(), getGeofencePendingIntent())
+                .addOnCompleteListener(this);
+    }
+
+    private GeofencingRequest getGeofencingRequest() {
+        GeofencingRequest.Builder builder = new GeofencingRequest.Builder();
+        builder.setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER);
+        builder.addGeofences(mGeofenceList);
+        return builder.build();
+    }
+
+    private PendingIntent getGeofencePendingIntent() {
+        if (mGeofencePendingIntent != null) {
+            return mGeofencePendingIntent;
+        }
+        Intent intent = new Intent(this, GeofenceBroadcastReceiver.class);
+        mGeofencePendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        return mGeofencePendingIntent;
+    }
+
+    private void showSnackbar(final String text) {
+        View container = findViewById(android.R.id.content);
+        if (container != null) {
+            Snackbar.make(container, text, Snackbar.LENGTH_LONG).show();
+        }
+    }
+
+    private void showSnackbar(final int mainTextStringId, final int actionStringId,
+                              View.OnClickListener listener) {
+        Snackbar.make(
+                findViewById(android.R.id.content),
+                getString(mainTextStringId),
+                Snackbar.LENGTH_INDEFINITE)
+                .setAction(getString(actionStringId), listener).show();
     }
 
     public void ecoMode(View view) {
