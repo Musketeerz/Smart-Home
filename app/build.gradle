@@ -4,6 +4,7 @@ android {
     compileSdkVersion 26
     defaultConfig {
         applicationId "com.example.musketeers.realm"
+        multiDexEnabled true
         minSdkVersion 19
         targetSdkVersion 26
         versionCode 1
@@ -35,6 +36,8 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     compile 'com.dynamitechetan.fogviewlibrary:FogViewLibrary:1.0.0'
 }
+
+
 
 
 apply plugin: 'com.google.gms.google-services'

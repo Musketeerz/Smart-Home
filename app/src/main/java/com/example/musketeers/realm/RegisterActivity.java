@@ -150,7 +150,7 @@ public class RegisterActivity extends AppCompatActivity {
             databaseReference.child(KEY).setValue(KEY);
 
             databaseReference = FirebaseDatabase.getInstance().getReference(KEY).child("ECOMODE STATUS");
-            databaseReference.child("WATER HEATER").setValue("Water Heater_false_10000");
+            databaseReference.child("WATER HEATER").setValue("Water Heater_false");
             databaseReference.child("IRON BOX").setValue("Iron Box_false");
             databaseReference.child("OUTSIDE LIGHT").setValue("Outside Light_false");
             databaseReference.child("BEDROOM LIGHT").setValue("Bedroom Light_false");
@@ -159,6 +159,15 @@ public class RegisterActivity extends AppCompatActivity {
             databaseReference.child("WASHING MACHINE").setValue("Washing Machine_false");
 
             databaseReference = FirebaseDatabase.getInstance().getReference(KEY).child("DEVICE STATUS");
+            databaseReference.child("WATER HEATER").setValue("Water Heater_false_10000");
+            databaseReference.child("IRON BOX").setValue("Iron Box_false");
+            databaseReference.child("OUTSIDE LIGHT").setValue("Outside Light_false");
+            databaseReference.child("BEDROOM LIGHT").setValue("Bedroom Light_false");
+            databaseReference.child("WATER MOTOR").setValue("Water Motor_false");
+            databaseReference.child("BEDROOM FAN").setValue("Bedroom Fan_false");
+            databaseReference.child("WASHING MACHINE").setValue("Washing Machine_false");
+
+            databaseReference = FirebaseDatabase.getInstance().getReference(KEY).child("NOTIFICATION");
             databaseReference.child("WATER HEATER").setValue("Water Heater_false");
             databaseReference.child("IRON BOX").setValue("Iron Box_false");
             databaseReference.child("OUTSIDE LIGHT").setValue("Outside Light_false");
@@ -166,6 +175,12 @@ public class RegisterActivity extends AppCompatActivity {
             databaseReference.child("WATER MOTOR").setValue("Water Motor_false");
             databaseReference.child("BEDROOM FAN").setValue("Bedroom Fan_false");
             databaseReference.child("WASHING MACHINE").setValue("Washing Machine_false");
+
+            databaseReference = FirebaseDatabase.getInstance().getReference(KEY).child("WATER HEATER TIMER");
+            databaseReference.child("TIME").setValue("10000");
+            databaseReference = FirebaseDatabase.getInstance().getReference(KEY).child("WATER MOTOR TIMER");
+            databaseReference.child("TIME").setValue("10000");
+
         } else {
             Toast.makeText(getApplicationContext(), "Enter Valid Credentials", Toast.LENGTH_SHORT).show();
         }
