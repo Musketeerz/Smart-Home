@@ -150,7 +150,7 @@ public class RegisterActivity extends AppCompatActivity {
             databaseReference.child(KEY).setValue(KEY);
 
             databaseReference = FirebaseDatabase.getInstance().getReference(KEY).child("ECOMODE STATUS");
-            databaseReference.child("WATER HEATER").setValue("Water Heater_false");
+            databaseReference.child("WATER HEATER").setValue("Water Heater_false_10000");
             databaseReference.child("IRON BOX").setValue("Iron Box_false");
             databaseReference.child("OUTSIDE LIGHT").setValue("Outside Light_false");
             databaseReference.child("BEDROOM LIGHT").setValue("Bedroom Light_false");
