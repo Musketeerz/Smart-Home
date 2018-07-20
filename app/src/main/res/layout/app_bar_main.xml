@@ -18,7 +18,9 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/activity_dashboard" />
+    <include
+        android:id="@+id/dash"
+        layout="@layout/activity_dashboard" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/speak"

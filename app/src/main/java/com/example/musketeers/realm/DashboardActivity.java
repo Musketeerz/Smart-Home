@@ -593,6 +593,10 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
                 break;
             case R.id.nav_analysis:
                 break;
+            case R.id.nav_statistics:
+                Intent i = new Intent(this, StatisticsActivity.class);
+                startActivity(i);
+                break;
             case R.id.nav_settings:
                 break;
             case R.id.nav_logout:
