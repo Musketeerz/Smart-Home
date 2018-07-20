@@ -588,8 +588,8 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
         int id = item.getItemId();
         switch (id) {
             case R.id.nav_eco:
-                Intent i = new Intent(this, EcoActivity.class);
-                startActivity(i);
+//                Intent i = new Intent(this, EcoActivity.class);
+//                startActivity(i);
                 break;
             case R.id.nav_analysis:
                 break;
