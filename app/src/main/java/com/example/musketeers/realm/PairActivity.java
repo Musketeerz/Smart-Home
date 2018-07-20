@@ -32,7 +32,7 @@ public class PairActivity extends AppCompatActivity {
 
         pairId.setText(KEY.substring(0,2)+"-"+KEY.substring(2,4)+"-"+KEY.substring(4,6)+"-"+KEY.substring(6,8)+"-"+KEY.substring(8,10));
 
-        databaseReference = FirebaseDatabase.getInstance().getReference(KEY.substring(0,2)+KEY.substring(2,4)+KEY.substring(4,6)+KEY.substring(6,8)+KEY.substring(8,10)).child("USER DETAILS");
+        databaseReference = FirebaseDatabase.getInstance().getReference(KEY).child("USER DETAILS");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -41,7 +41,7 @@ public class PairActivity extends AppCompatActivity {
                     name.add(usrs);
                 }
 
-                if(name.get(3).equals("true")) {
+                if(name.get(5).equals("true")) {
                     pair();
                 } else {
                     name.clear();

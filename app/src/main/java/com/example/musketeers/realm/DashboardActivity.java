@@ -134,10 +134,10 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
             Toast.makeText(getApplicationContext(), "Database Failure", Toast.LENGTH_SHORT).show();
         }
 
-        mGeofenceList = new ArrayList<>();
-        mGeofencePendingIntent = null;
-        populateGeofenceList();
-        mGeofencingClient = LocationServices.getGeofencingClient(this);
+//        mGeofenceList = new ArrayList<>();
+//        mGeofencePendingIntent = null;
+//        populateGeofenceList();
+//        mGeofencingClient = LocationServices.getGeofencingClient(this);
 
         name = findViewById(R.id.name);
 
@@ -315,106 +315,106 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
         }
     }
 
-    private void populateGeofenceList() {
-        mGeofenceList.add(new Geofence.Builder()
-                .setRequestId("Home")
-                .setCircularRegion(
-                        latitude,
-                        longitude,
-                        GEOFENCE_RADIUS_IN_METERS
-                )
-                .setExpirationDuration(GEOFENCE_EXPIRATION_IN_MILLISECONDS)
-                .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER |
-                        Geofence.GEOFENCE_TRANSITION_EXIT)
-                .build());
-    }
+//    private void populateGeofenceList() {
+//        mGeofenceList.add(new Geofence.Builder()
+//                .setRequestId("Home")
+//                .setCircularRegion(
+//                        latitude,
+//                        longitude,
+//                        GEOFENCE_RADIUS_IN_METERS
+//                )
+//                .setExpirationDuration(GEOFENCE_EXPIRATION_IN_MILLISECONDS)
+//                .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER |
+//                        Geofence.GEOFENCE_TRANSITION_EXIT)
+//                .build());
+//    }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if (!checkPermissions()) {
-            requestPermissions();
-        } else {
-            performPendingGeofenceTask();
-        }
-    }
+//    @Override
+//    protected void onStart() {
+//        super.onStart();
+//        if (!checkPermissions()) {
+//            requestPermissions();
+//        } else {
+//            performPendingGeofenceTask();
+//        }
+//    }
 
-    private boolean checkPermissions() {
-        int permissionState = ActivityCompat.checkSelfPermission(this,
-                android.Manifest.permission.ACCESS_FINE_LOCATION);
-        return permissionState == PackageManager.PERMISSION_GRANTED;
-    }
+//    private boolean checkPermissions() {
+//        int permissionState = ActivityCompat.checkSelfPermission(this,
+//                android.Manifest.permission.ACCESS_FINE_LOCATION);
+//        return permissionState == PackageManager.PERMISSION_GRANTED;
+//    }
 
-    private void requestPermissions() {
-        boolean shouldProvideRationale =
-                ActivityCompat.shouldShowRequestPermissionRationale(this,
-                        android.Manifest.permission.ACCESS_FINE_LOCATION);
-        if (shouldProvideRationale) {
-            Log.i(TAG, "Displaying permission rationale to provide additional context.");
-            showSnackbar(R.string.permission_rationale, android.R.string.ok,
-                    new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            ActivityCompat.requestPermissions(DashboardActivity.this,
-                                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
-                                    REQUEST_PERMISSIONS_REQUEST_CODE);
-                        }
-                    });
-        } else {
-            Log.i(TAG, "Requesting permission");
-            ActivityCompat.requestPermissions(DashboardActivity.this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    REQUEST_PERMISSIONS_REQUEST_CODE);
-        }
-    }
+//    private void requestPermissions() {
+//        boolean shouldProvideRationale =
+//                ActivityCompat.shouldShowRequestPermissionRationale(this,
+//                        android.Manifest.permission.ACCESS_FINE_LOCATION);
+//        if (shouldProvideRationale) {
+//            Log.i(TAG, "Displaying permission rationale to provide additional context.");
+//            showSnackbar(R.string.permission_rationale, android.R.string.ok,
+//                    new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View view) {
+//                            ActivityCompat.requestPermissions(DashboardActivity.this,
+//                                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+//                                    REQUEST_PERMISSIONS_REQUEST_CODE);
+//                        }
+//                    });
+//        } else {
+//            Log.i(TAG, "Requesting permission");
+//            ActivityCompat.requestPermissions(DashboardActivity.this,
+//                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+//                    REQUEST_PERMISSIONS_REQUEST_CODE);
+//        }
+//    }
 
-    private void performPendingGeofenceTask() {
-        if (mPendingGeofenceTask == PendingGeofenceTask.ADD) {
-            addGeofences();
-        }
-    }
+//    private void performPendingGeofenceTask() {
+//        if (mPendingGeofenceTask == PendingGeofenceTask.ADD) {
+//            addGeofences();
+//        }
+//    }
 
-    @SuppressWarnings("MissingPermission")
-    private void addGeofences() {
-        if (!checkPermissions()) {
-            showSnackbar(getString(R.string.insufficient_permissions));
-            return;
-        }
-        mGeofencingClient.addGeofences(getGeofencingRequest(), getGeofencePendingIntent())
-                .addOnCompleteListener(this);
-    }
+//    @SuppressWarnings("MissingPermission")
+//    private void addGeofences() {
+//        if (!checkPermissions()) {
+//            showSnackbar(getString(R.string.insufficient_permissions));
+//            return;
+//        }
+//        mGeofencingClient.addGeofences(getGeofencingRequest(), getGeofencePendingIntent())
+//                .addOnCompleteListener(this);
+//    }
 
-    private GeofencingRequest getGeofencingRequest() {
-        GeofencingRequest.Builder builder = new GeofencingRequest.Builder();
-        builder.setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER);
-        builder.addGeofences(mGeofenceList);
-        return builder.build();
-    }
-
-    private PendingIntent getGeofencePendingIntent() {
-        if (mGeofencePendingIntent != null) {
-            return mGeofencePendingIntent;
-        }
-        Intent intent = new Intent(this, GeofenceBroadcastReceiver.class);
-        mGeofencePendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        return mGeofencePendingIntent;
-    }
-
-    private void showSnackbar(final String text) {
-        View container = findViewById(android.R.id.content);
-        if (container != null) {
-            Snackbar.make(container, text, Snackbar.LENGTH_LONG).show();
-        }
-    }
-
-    private void showSnackbar(final int mainTextStringId, final int actionStringId,
-                              View.OnClickListener listener) {
-        Snackbar.make(
-                findViewById(android.R.id.content),
-                getString(mainTextStringId),
-                Snackbar.LENGTH_INDEFINITE)
-                .setAction(getString(actionStringId), listener).show();
-    }
+//    private GeofencingRequest getGeofencingRequest() {
+//        GeofencingRequest.Builder builder = new GeofencingRequest.Builder();
+//        builder.setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER);
+//        builder.addGeofences(mGeofenceList);
+//        return builder.build();
+//    }
+//
+//    private PendingIntent getGeofencePendingIntent() {
+//        if (mGeofencePendingIntent != null) {
+//            return mGeofencePendingIntent;
+//        }
+//        Intent intent = new Intent(this, GeofenceBroadcastReceiver.class);
+//        mGeofencePendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+//        return mGeofencePendingIntent;
+//    }
+//
+//    private void showSnackbar(final String text) {
+//        View container = findViewById(android.R.id.content);
+//        if (container != null) {
+//            Snackbar.make(container, text, Snackbar.LENGTH_LONG).show();
+//        }
+//    }
+//
+//    private void showSnackbar(final int mainTextStringId, final int actionStringId,
+//                              View.OnClickListener listener) {
+//        Snackbar.make(
+//                findViewById(android.R.id.content),
+//                getString(mainTextStringId),
+//                Snackbar.LENGTH_INDEFINITE)
+//                .setAction(getString(actionStringId), listener).show();
+//    }
 
     public void ecoMode(View view) {
         if (eco.isChecked()) {
