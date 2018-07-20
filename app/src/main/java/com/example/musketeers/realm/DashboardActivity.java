@@ -62,6 +62,7 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
     ArrayList<String> a_name = new ArrayList<>();
     ArrayList<Boolean> a_switch = new ArrayList<>();
     ArrayList<Boolean> a_eco = new ArrayList<>();
+    ArrayList<String> current = new ArrayList<>();
 
     WordAdapter adapter;
     ListView applianceListView;
@@ -182,7 +183,9 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
                     }
                 } else {
                     latitude = Double.parseDouble(name1.get(2));
+                    Log.d(TAG, "onDataChange: " + latitude);
                     longitude = Double.parseDouble(name1.get(3));
+                    Log.d(TAG, "onDataChange: " + longitude);
                     name1.clear();
                 }
             }
@@ -479,7 +482,8 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
     }
 
     private void makeToast(String cmd) {
-        int got = 0;
+        int got = 0, cur = 0;
+        String curr = "The devices that are currently running are ";
         for (int i = 0; i < name_voice.size(); i++) {
             if (got == 1)
                 break;
@@ -529,8 +533,7 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
                     if (a_switch.get(i)) {
                         got = 1;
                         reply = name_voice_ + " already turned on";
-                    }
-                    else {
+                    } else {
                         got = 1;
                         reply = name_voice_ + " turned on";
                         databaseReference = FirebaseDatabase.getInstance().getReference(passcode_pass).child("DEVICE STATUS");
@@ -540,8 +543,7 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
                     if (!a_switch.get(i)) {
                         got = 1;
                         reply = name_voice_ + " already turned off";
-                    }
-                    else {
+                    } else {
                         got = 1;
                         reply = name_voice_ + " turned off";
                         databaseReference = FirebaseDatabase.getInstance().getReference(passcode_pass).child("DEVICE STATUS");
@@ -551,13 +553,25 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
                     Log.d("pardon", "pardon: in");
                     reply = "Pardon! Speak Again.";
                 }
+            } else if (cmd.contains("list")) {
+                if (a_switch.get(i)) {
+                    cur ++;
+                    curr += a_name.get(i) + ", ";
+                } else {
+                    reply = "None of the devices are currently running.";
+                }
             } else {
                 Log.d("pardon", "pardon: out");
                 reply = "Pardon! Speak Again.";
             }
         }
-        Toast.makeText(getApplicationContext(), reply, Toast.LENGTH_SHORT).show();
-        tts.speak(reply, TextToSpeech.QUEUE_FLUSH, null);
+        if (cur == 0) {
+            Toast.makeText(getApplicationContext(), reply, Toast.LENGTH_SHORT).show();
+            tts.speak(reply, TextToSpeech.QUEUE_FLUSH, null);
+        } else {
+            Toast.makeText(getApplicationContext(), curr, Toast.LENGTH_SHORT).show();
+            tts.speak(curr, TextToSpeech.QUEUE_FLUSH, null);
+        }
     }
 
     @Override
@@ -574,6 +588,8 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
         int id = item.getItemId();
         switch (id) {
             case R.id.nav_eco:
+                Intent i = new Intent(this, EcoActivity.class);
+                startActivity(i);
                 break;
             case R.id.nav_analysis:
                 break;

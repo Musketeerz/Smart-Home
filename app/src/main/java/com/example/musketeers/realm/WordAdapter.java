@@ -24,6 +24,7 @@ public class WordAdapter extends ArrayAdapter<Word> {
     String reply;
     DatabaseReference databaseReference;
     TextToSpeech tts;
+    String time="10000";
 
     public WordAdapter(Activity context, ArrayList<Word> words) {
         super(context, 0, words);
@@ -68,11 +69,11 @@ public class WordAdapter extends ArrayAdapter<Word> {
                 if (currentWord.getaSwitch()) {
                     reply = currentWord.getaName() + " turned off";
                     databaseReference = FirebaseDatabase.getInstance().getReference(DashboardActivity.passcode_pass).child("DEVICE STATUS");
-                    databaseReference.child(currentWord.getaName().toUpperCase()).setValue((currentWord.getaName()) + "_false");
+                    databaseReference.child(currentWord.getaName().toUpperCase()).setValue((currentWord.getaName()) + "_false_"+time);
                 } else {
                     reply = currentWord.getaName() + " turned on";
                     databaseReference = FirebaseDatabase.getInstance().getReference(DashboardActivity.passcode_pass).child("DEVICE STATUS");
-                    databaseReference.child(currentWord.getaName().toUpperCase()).setValue((currentWord.getaName()) + "_true");
+                    databaseReference.child(currentWord.getaName().toUpperCase()).setValue((currentWord.getaName()) + "_true_"+time);
                 }
 
                 Toast.makeText(getContext(), reply, Toast.LENGTH_SHORT).show();
@@ -87,11 +88,11 @@ public class WordAdapter extends ArrayAdapter<Word> {
                 if (currentWord.getaEco()) {
                     reply = "eco mode of " + currentWord.getaName() + " turned off";
                     databaseReference = FirebaseDatabase.getInstance().getReference(DashboardActivity.passcode_pass).child("ECOMODE STATUS");
-                    databaseReference.child(currentWord.getaName().toUpperCase()).setValue((currentWord.getaName()) + "_false");
+                    databaseReference.child(currentWord.getaName().toUpperCase()).setValue((currentWord.getaName()) + "_false_10000");
                 } else {
                     reply = "eco mode of " + currentWord.getaName() + " turned on";
                     databaseReference = FirebaseDatabase.getInstance().getReference(DashboardActivity.passcode_pass).child("ECOMODE STATUS");
-                    databaseReference.child(currentWord.getaName().toUpperCase()).setValue((currentWord.getaName()) + "_true");
+                    databaseReference.child(currentWord.getaName().toUpperCase()).setValue((currentWord.getaName()) + "_true_10000");
                 }
                 Toast.makeText(getContext(), reply, Toast.LENGTH_SHORT).show();
                 tts.speak(reply, TextToSpeech.QUEUE_FLUSH, null);
