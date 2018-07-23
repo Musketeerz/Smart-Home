@@ -8,4 +8,10 @@
     <color name="textPrimary">#212121</color>
     <color name="textSecondary">#757575</color>
     <color name="colorDivider">#bdbdbd</color>
+    <color name="Primary">#263237</color>
+    <color name="PrimaryDark">#1e282d</color>
+    <color name="Accent">#1e282d</color>
+    <color name="tPrimary">#f5f5f5</color>
+    <color name="textPrimaryDark">#95aab4</color>
+    <color name="errorText">#ff7878</color>
 </resources>

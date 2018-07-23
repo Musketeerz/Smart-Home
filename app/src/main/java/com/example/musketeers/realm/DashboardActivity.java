@@ -587,6 +587,10 @@ public class DashboardActivity extends AppCompatActivity implements NavigationVi
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch (id) {
+            case R.id.door:
+                Intent door = new Intent(DashboardActivity.this, FingerprintActivity.class);
+                startActivity(door);
+                break;
             case R.id.nav_eco:
 //                Intent i = new Intent(this, EcoActivity.class);
 //                startActivity(i);
